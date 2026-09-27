@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 48 100% 97.0588%;
+    --foreground: 240 1.9608% 10%;
+    --card: 48 100% 97.0588%;
+    --card-foreground: 240 1.9608% 10%;
+    --popover: 48 100% 97.0588%;
+    --popover-foreground: 240 1.9608% 10%;
+    --primary: 41.134 100% 61.9608%;
+    --primary-foreground: 0 0% 8.6275%;
+    --secondary: 33.913 65.7143% 93.1373%;
+    --secondary-foreground: 240 1.9608% 10%;
+    --muted: 47.1429 46.6667% 94.1176%;
+    --muted-foreground: 0 0% 45.098%;
+    --accent: 0 0% 96.0784%;
+    --accent-foreground: 240 1.9608% 10%;
+    --destructive: 351.8841 100% 40.5882%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 89.8039%;
+    --input: 0 0% 89.8039%;
+    --ring: 41.134 100% 61.9608%;
+    --chart-1: 211.9266 100% 78.6275%;
+    --chart-2: 217.3404 91.2621% 59.6078%;
+    --chart-3: 221.5842 86.3248% 54.1176%;
+    --chart-4: 223.75 78.6885% 47.8431%;
+    --chart-5: 226.4789 69.6078% 40%;
+    --sidebar: 48 100% 97.0588%;
+    --sidebar-foreground: 240 1.9608% 10%;
+    --sidebar-primary: 41.134 100% 61.9608%;
+    --sidebar-primary-foreground: 0 0% 8.6275%;
+    --sidebar-accent: 0 0% 96.0784%;
+    --sidebar-accent-foreground: 240 1.9608% 10%;
+    --sidebar-border: 0 0% 89.8039%;
+    --sidebar-ring: 41.134 100% 61.9608%;
+    --font-sans: Albert Sans, ui-sans-serif, sans-serif, system-ui;
+    --font-serif: DM Serif Display, ui-serif, serif;
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+      monospace;
+    --radius: 0.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: #000000;
+    --shadow-2xs: 0px 4px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 4px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 4px 3px 0px hsl(0 0% 0% / 0.25);
+    --tracking-normal: -0.01em;
+    --spacing: 0.26rem;
+  }
+
+  .dark {
+    --background: 240 5.8824% 10%;
+    --foreground: 0 0% 98.0392%;
+    --card: 240 5.8824% 10%;
+    --card-foreground: 0 0% 98.0392%;
+    --popover: 240 5.8824% 10%;
+    --popover-foreground: 0 0% 98.0392%;
+    --primary: 41.134 100% 61.9608%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 5.8824% 10%;
+    --secondary-foreground: 0 0% 98.0392%;
+    --muted: 240 4.2254% 13.9216%;
+    --muted-foreground: 0 0% 63.1373%;
+    --accent: 0 0% 25.098%;
+    --accent-foreground: 0 0% 98.0392%;
+    --destructive: 358.8312 100% 69.8039%;
+    --destructive-foreground: 0 0% 98.0392%;
+    --border: 0 0% 15.6863%;
+    --input: 0 0% 20.3922%;
+    --ring: 41.134 100% 61.9608%;
+    --chart-1: 211.9266 100% 78.6275%;
+    --chart-2: 217.3404 91.2621% 59.6078%;
+    --chart-3: 221.5842 86.3248% 54.1176%;
+    --chart-4: 223.75 78.6885% 47.8431%;
+    --chart-5: 226.4789 69.6078% 40%;
+    --sidebar: 240 5.8824% 10%;
+    --sidebar-foreground: 0 0% 98.0392%;
+    --sidebar-primary: 41.134 100% 61.9608%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 25.098%;
+    --sidebar-accent-foreground: 0 0% 98.0392%;
+    --sidebar-border: 0 0% 15.6863%;
+    --sidebar-ring: 41.134 100% 61.9608%;
+    --font-sans: Albert Sans, ui-sans-serif, sans-serif, system-ui;
+    --font-serif: Georgia, serif;
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+      monospace;
+    --radius: 0.5rem;
+    --shadow-x: 0px;
+    --shadow-y: 4px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: #000000;
+    --shadow-2xs: 0px 4px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 4px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow-md: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl: 0px 4px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 4px 3px 0px hsl(0 0% 0% / 0.25);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
