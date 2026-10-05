@@ -19,7 +19,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
@@ -39,10 +39,17 @@
         {
           "faceIDPermission": "Unlock Workout Tracker with Face ID."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow access to photos to attach an exercise image."
+        }
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "reactCompiler": true
     }
   }
 }

@@ -12,7 +12,7 @@ export const initDb = async () => {
 const executeQuery = async <T>(sql: string, args: Record<string, SQLite.SQLiteBindValue>) => {
   if (!db) throw new Error('Database is not initialized');
   const query = QUERY[sql];
-  console.log(`EXECUTING QUERY ${query} WITH ARGS ${args}`);
+  console.log(`EXECUTING QUERY ${query} WITH ARGS ${JSON.stringify(args)}`);
   return db.getAllAsync<T>(query, args);
 };
 
