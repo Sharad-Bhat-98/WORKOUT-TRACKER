@@ -1,8 +1,4 @@
-import { Text } from '@/components/ui/text';
 import { View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { Button } from '@/components/ui/button';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
 import { Card } from '@/components/ui/card';
@@ -80,22 +76,8 @@ export default function EditWorkout() {
   });
 
   return (
-    <SafeAreaView className="w-full p-5">
-      <View className="w-full flex-row items-center gap-3">
-        <Button
-          size="icon"
-          variant="ghost"
-          className="rounded-full"
-          onPress={() => router.push('/(app)/(Workout)')}>
-          <AntDesign
-            name="arrow-left"
-            size={24}
-            color={colorScheme === 'light' ? 'black' : 'white'}
-          />
-        </Button>
-        <Text variant="h1">Edit Workout</Text>
-      </View>
-      <Card className="mt-5 p-5">
+    <View className="w-full px-5">
+      <Card className="p-5">
         <form.AppForm>
           <form.AppField name="name">
             {(field) => <field.FormTextField label="Workout Name" autoCapitalize="none" />}
@@ -106,6 +88,6 @@ export default function EditWorkout() {
           <form.SubmitButton title="Submit" />
         </form.AppForm>
       </Card>
-    </SafeAreaView>
+    </View>
   );
 }

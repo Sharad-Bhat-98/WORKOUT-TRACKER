@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import executeQuery from '@/lib/database';
 import { useUserStore } from '@/store/user';
@@ -16,7 +15,6 @@ type Workout = {
 export default function Home() {
   const { colorScheme } = useColorScheme();
   const userId = useUserStore((s) => s.user_id);
-  const username = useUserStore((s) => s.username);
 
   const query = useQuery({
     queryKey: ['getWorkout'],
@@ -28,13 +26,8 @@ export default function Home() {
     },
   });
   return (
-    <SafeAreaView className="p-2">
-      <Text variant="h2" className="text-left">
-        Hi {username}
-      </Text>
-      <Text variant="muted">Lets Make Progress Today</Text>
-
-      <View className="mt-5 gap-4">
+    <View className="p-5">
+      <View className="gap-4">
         {query.isLoading ? (
           <Text variant="h2"> LOADING .....</Text>
         ) : (
@@ -43,7 +36,7 @@ export default function Home() {
               <Card className="flex-row items-center justify-between">
                 <CardHeader>
                   <CardTitle>{e.name}</CardTitle>
-                  <CardDescription>No of Excerises</CardDescription>
+                  <CardDescription>No of Exercises</CardDescription>
                 </CardHeader>
                 <Entypo
                   name="chevron-right"
@@ -56,6 +49,6 @@ export default function Home() {
           ))
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }

@@ -1,6 +1,6 @@
 import { useAppForm } from '@/components/HookForm';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Image, ScrollView, View } from 'react-native';
@@ -11,15 +11,14 @@ import { z } from 'zod';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import ImageCard from '@/components/ImageCard';
+import { ImageType } from '@/types/types';
+
 import { Icon } from '@/components/ui/icon';
 import { Trash2 } from 'lucide-react-native';
 
-type ImageType = {
-  name: string;
-  data: string;
-};
 const schema = z.object({
-  name: z.string().min(3),
+  name: z.string(),
 });
 
 export default function UploadImage() {
@@ -99,7 +98,7 @@ export default function UploadImage() {
   };
 
   return (
-    <SafeAreaView className="w-full px-5">
+    <View className="w-full px-5">
       <Card className="p-5">
         <form.AppForm>
           <form.AppField name="name">
@@ -120,20 +119,22 @@ export default function UploadImage() {
 
       <ScrollView className="mt-5" contentContainerClassName="gap-4">
         {imageData.data?.map((e) => (
-          <Card key={e.name} className="flex-row items-center justify-between px-2">
-            <CardHeader className="flex-1">
-              <CardTitle>{e.name}</CardTitle>
-            </CardHeader>
-            <Button
-              variant="destructive"
-              size="icon"
-              onPress={() => deleteMutation.mutate({ name: e.name })}>
-              <Icon as={Trash2} size={16} />
-            </Button>
-          </Card>
+          <ImageCard
+            key={e.name}
+            title={e.name}
+            imageData={e.data}
+            footer={
+              <Button
+                variant="destructive"
+                size="icon"
+                onPress={() => deleteMutation.mutate({ name: e.name })}>
+                <Icon as={Trash2} size={16} />
+              </Button>
+            }
+          />
         ))}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

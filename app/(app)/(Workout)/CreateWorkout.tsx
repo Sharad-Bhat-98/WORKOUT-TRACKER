@@ -1,10 +1,7 @@
 import { Text } from '@/components/ui/text';
 import { Image, Pressable, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
-import { useColorScheme } from 'nativewind';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAppForm } from '@/components/HookForm';
 import { z } from 'zod';
@@ -13,7 +10,7 @@ import * as Crypto from 'expo-crypto';
 import { useUserStore } from '@/store/user';
 import { toast } from 'sonner-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getExceriseType, ImageType } from '@/types/types';
+import { getExerciseType, ImageType } from '@/types/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useState } from 'react';
 
@@ -24,8 +21,7 @@ const schema = z.object({
 });
 export default function CreateWorkout() {
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
-  const userStore = useUserStore();
+  const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
   const [exercisesList, setExercisesList] = useState<string[]>([]);
 
@@ -35,7 +31,7 @@ export default function CreateWorkout() {
       await executeInsertUpdate('createWorkout', {
         $id: id,
         $name: value.name,
-        $user_id: userStore.user_id,
+        $user_id: userId,
         $description: value.description,
         $image: value.image,
       });
@@ -56,12 +52,13 @@ export default function CreateWorkout() {
     queryFn: async () => await executeQuery<ImageType>('getImages', {}),
   });
 
-  const excerises = useQuery({
-    queryKey: ['getExcerise'],
-    queryFn: async () => await executeQuery<getExceriseType>('getExcerise', {}),
+  const exercises = useQuery({
+    queryKey: ['getExercise'],
+    enabled: !!userId,
+    queryFn: async () => await executeQuery<getExerciseType>('getExercise', { $userId: userId }),
   });
 
-  if (excerises.isError) toast.error('Failed To Fetch Excerises');
+  if (exercises.isError) toast.error('Failed To Fetch Exercises');
 
   const form = useAppForm({
     defaultValues: {
@@ -74,7 +71,7 @@ export default function CreateWorkout() {
     },
     onSubmit: async ({ value, formApi }) => {
       if (exercisesList.length === 0) {
-        toast.warning('Please Select Excerise');
+        toast.warning('Please Select Exercise');
         return;
       }
       await createMutation.mutateAsync(value, {
@@ -85,28 +82,12 @@ export default function CreateWorkout() {
     },
   });
 
-  const handleExerciseClick = (e: getExceriseType) => {
+  const handleExerciseClick = (e: getExerciseType) => {
     if (e.name in exercisesList) setExercisesList((s) => s.filter((item) => item !== e.name));
     else setExercisesList((s) => [...s, e.name]);
   };
   return (
     <SafeAreaView className="w-full p-5">
-      <View className="w-full flex-row items-center gap-3">
-        <Button
-          size="icon"
-          variant="ghost"
-          className="rounded-full"
-          onPress={() => router.push('/(app)/(Workout)')}>
-          <AntDesign
-            name="arrow-left"
-            size={24}
-            color={colorScheme === 'light' ? 'black' : 'white'}
-          />
-        </Button>
-        <Text variant="h2" className="text-center">
-          Create Workout
-        </Text>
-      </View>
       <Card className="mt-5 p-5">
         <form.AppForm>
           <form.AppField name="name">
@@ -132,12 +113,12 @@ export default function CreateWorkout() {
         <Text variant="h4" className="text-center">
           Add Exercises
         </Text>
-        {excerises.isLoading ? (
+        {exercises.isLoading ? (
           <Text variant="p" className="text-center">
             LOADING.....
           </Text>
         ) : (
-          excerises.data?.map((e) => (
+          exercises.data?.map((e) => (
             <Pressable key={e.id} onPress={() => handleExerciseClick(e)} className="gap-2">
               <Card className="flex-row items-center justify-between">
                 <View className="ml-4 rounded-md bg-primary p-1">

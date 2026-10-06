@@ -81,21 +81,25 @@ const QUERY: Record<string, string> = {
   createWorkout:
     'INSERT INTO workouts (id , name , user_id , description , image) VALUES ($id , $name , $user_id , $description, $image);',
   deleteWorkout: 'delete from workouts where id = $id',
-  deleteExcerisesForWorkout: 'delete from exercises where workout_id = $id',
+  deleteExercisesForWorkout: 'delete from exercises where workout_id = $id',
   updateWorkout: 'update workouts set name = $name, description = $description where id = $id',
   getWorkoutById: 'select id , name , description from workouts where id = $id',
   createExercise:
-    'insert into exercises (id , name , user_id , image_data) values ($id , $name , $user_id , $image_data);',
+    'insert into exercises (id , name , user_id , image) values ($id , $name , $user_id , $image);',
   insertImage: 'insert into images (name , data) VALUES ($name , $image_data);',
   getImages: 'select * from images;',
   deleteImage: 'delete from images where name = $name',
-  getExcerise: `
+  getExercise: `
                 SELECT exercises.id,
                       exercises.name,
                       images.data AS image
                 FROM exercises
                 LEFT JOIN images ON exercises.image = images.name
+                where exercises.user_id = $userId
               `,
+  deleteExercise: 'delete from exercises where id = $id',
+  getExerciseById: 'select id, name, image from exercises where id = $id',
+  updateExercise: 'update exercises set name = $name, image = $image where id = $id',
 };
 
 export default QUERY;
