@@ -2,7 +2,6 @@ import { useAppForm } from '@/components/HookForm';
 import { Card } from '@/components/ui/card';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Crypto from 'expo-crypto';
 import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { useUserStore } from '@/store/user';
