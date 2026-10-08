@@ -1,5 +1,5 @@
 import { Text } from '@/components/ui/text';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
@@ -42,52 +42,50 @@ export default function Workout() {
     onError: () => toast.error('Failed To Delete Workout'),
   });
   return (
-    <View className="w-full px-5 pt-2">
-      <View className="gap-4">
-        {query.isLoading ? (
-          <Text variant="h2"> LOADING .....</Text>
-        ) : (
-          query.data?.map((e) => (
-            <ImageCard
-              key={e.name}
-              title={e.name}
-              imageData={e.data}
-              description={`${e.count} Exercises`}
-              footer={
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
-                      <Entypo
-                        name="dots-three-vertical"
-                        size={18}
-                        color={colorScheme === 'dark' ? 'white' : 'black'}
-                      />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuItem
-                      onPress={() =>
-                        router.push({
-                          pathname: '/(app)/(Workout)/EditWorkout',
-                          params: { id: e.id },
-                        })
-                      }>
-                      <Icon as={Pencil} size={16} />
-                      <Text>Edit</Text>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onPress={() => deleteMutation.mutate(e.id)}>
-                      <Icon as={Trash2} size={16} />
-                      <Text>Delete</Text>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              }
-            />
-          ))
-        )}
-      </View>
-    </View>
+    <ScrollView className="w-full px-5 pt-2" contentContainerClassName="gap-2">
+      {query.isLoading ? (
+        <Text variant="h2"> LOADING .....</Text>
+      ) : (
+        query.data?.map((e) => (
+          <ImageCard
+            key={e.name}
+            title={e.name}
+            imageData={e.data}
+            description={`${e.count} Exercises`}
+            footer={
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost">
+                    <Entypo
+                      name="dots-three-vertical"
+                      size={18}
+                      color={colorScheme === 'dark' ? 'white' : 'black'}
+                    />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                  <DropdownMenuItem
+                    onPress={() =>
+                      router.push({
+                        pathname: '/(app)/(Workout)/EditWorkout',
+                        params: { id: e.id },
+                      })
+                    }>
+                    <Icon as={Pencil} size={16} />
+                    <Text>Edit</Text>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onPress={() => deleteMutation.mutate(e.id)}>
+                    <Icon as={Trash2} size={16} />
+                    <Text>Delete</Text>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            }
+          />
+        ))
+      )}
+    </ScrollView>
   );
 }

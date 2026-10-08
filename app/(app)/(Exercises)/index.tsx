@@ -11,7 +11,7 @@ import { Text } from '@/components/ui/text';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useRouter } from 'expo-router';
 import { useColorScheme } from 'nativewind';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Pencil, Trash2 } from 'lucide-react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/store/user';
@@ -43,7 +43,7 @@ export default function Exercise() {
   });
 
   return (
-    <View className="w-full px-5 pt-1">
+    <ScrollView className="mb-5 w-full px-5 pt-1">
       <View className="gap-4">
         {exercises.isLoading ? (
           <Text variant="h2"> LOADING .....</Text>
@@ -53,6 +53,7 @@ export default function Exercise() {
               key={e.name}
               title={e.name}
               imageData={e.image}
+
               footer={
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -88,6 +89,6 @@ export default function Exercise() {
           ))
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }

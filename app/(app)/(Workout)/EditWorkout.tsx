@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useColorScheme } from 'nativewind';
 import { Card } from '@/components/ui/card';
 import { useAppForm } from '@/components/HookForm';
 import { z } from 'zod';
@@ -21,7 +20,6 @@ type WorkoutDetails = {
 
 export default function EditWorkout() {
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
   const queryClient = useQueryClient();
   const { id: workoutId } = useLocalSearchParams<{ id: string }>();
   const id = Array.isArray(workoutId) ? workoutId[0] : workoutId;
@@ -61,20 +59,6 @@ export default function EditWorkout() {
       });
     },
   });
-
-  useQuery({
-    queryKey: ['workouts', id],
-    queryFn: async () => {
-      const res = await executeQuery<WorkoutDetails>('getWorkoutById', { $id: id });
-      const workout = res[0];
-      console.log(res);
-      if (!workout) return;
-      form.setFieldValue('name', workout.name);
-      form.setFieldValue('description', workout.description ?? '');
-      return res;
-    },
-  });
-
   return (
     <View className="w-full px-5">
       <Card className="p-5">

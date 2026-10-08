@@ -73,9 +73,10 @@ const QUERY: Record<string, string> = {
   getWorkout: `
                 SELECT workouts.id, workouts.name, images.data , count(workout_exercises.exercise_id) as count
                 FROM workouts
-                INNER JOIN images ON images.name = workouts.image
+                LEFT JOIN images ON images.name = workouts.image
                 LEFT JOIN workout_exercises ON workouts.id = workout_exercises.workout_id
                 WHERE workouts.user_id = $userid
+                GROUP BY workouts.id
                 ORDER BY workouts.created_at DESC;
               `,
   createWorkout:
@@ -100,6 +101,8 @@ const QUERY: Record<string, string> = {
   deleteExercise: 'delete from exercises where id = $id',
   getExerciseById: 'select id, name, image from exercises where id = $id',
   updateExercise: 'update exercises set name = $name, image = $image where id = $id',
+  insertWorkoutExercises:
+    'insert into workout_exercises (workout_id , exercise_id , position , target_sets) values ($WorkoutId , $ExerciseId , $Position , $Sets)',
 };
 
 export default QUERY;

@@ -98,7 +98,7 @@ export default function UploadImage() {
   };
 
   return (
-    <View className="w-full px-5">
+    <View className="w-full flex-1 px-5">
       <Card className="p-5">
         <form.AppForm>
           <form.AppField name="name">

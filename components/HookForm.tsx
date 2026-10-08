@@ -47,7 +47,7 @@ function FormTextField({ label, ...props }: TextFieldProps) {
         accessibilityLabel={label}
       />
 
-      {showError ? <Text>{error}</Text> : null}
+      {showError ? <Text className="text-destructive">{error}</Text> : null}
     </>
   );
 }

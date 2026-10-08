@@ -52,6 +52,13 @@ export default function TabLayout() {
           href: null,
         }}
       />
+
+      <Tabs.Screen
+        name="(Workout)/WorkoutExerciseMap"
+        options={{
+          href: null,
+        }}
+      />
       <Tabs.Screen
         name="(Workout)/EditWorkout"
         options={{
