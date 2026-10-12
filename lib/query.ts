@@ -16,7 +16,7 @@ export const INIT_SQL = [
     name TEXT NOT NULL,
     image TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (user_id, name),
+    UNIQUE  (user_id, name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (image) REFERENCES images(name) ON DELETE SET NULL
   );`,
@@ -85,6 +85,8 @@ const QUERY: Record<string, string> = {
   deleteExercisesForWorkout: 'delete from exercises where workout_id = $id',
   updateWorkout: 'update workouts set name = $name, description = $description where id = $id',
   getWorkoutById: 'select id , name , description from workouts where id = $id',
+  getWorkoutExerciseById:
+    'select exercise_id as id ,position ,target_sets as sets from workout_exercises where workout_id = $workoutId',
   createExercise:
     'insert into exercises (id , name , user_id , image) values ($id , $name , $user_id , $image);',
   insertImage: 'insert into images (name , data) VALUES ($name , $image_data);',
@@ -103,6 +105,15 @@ const QUERY: Record<string, string> = {
   updateExercise: 'update exercises set name = $name, image = $image where id = $id',
   insertWorkoutExercises:
     'insert into workout_exercises (workout_id , exercise_id , position , target_sets) values ($WorkoutId , $ExerciseId , $Position , $Sets)',
+  updateWorkoutExercise: `
+      UPDATE workout_exercises
+      set position = $position,
+      target_sets = $targetSets
+      where exercise_id = $exeriseId
+      and workout_id = $workoutId
+  `,
+  deleteWorkoutExercise:
+    'delete from workout_exercises where exercise_id = $exeriseId and workout_id = $workoutId',
 };
 
 export default QUERY;

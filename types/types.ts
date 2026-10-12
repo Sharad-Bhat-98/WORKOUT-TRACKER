@@ -30,3 +30,16 @@ export type ImageDeleteCardType = {
 export type BackButtonType = {
   path: Href;
 };
+
+export type getWorkoutByIdType = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export type getWorkoutExerciseByIdType = {
+  workout_id: string;
+  id: string;
+  position: number;
+  target_sets: number;
+};

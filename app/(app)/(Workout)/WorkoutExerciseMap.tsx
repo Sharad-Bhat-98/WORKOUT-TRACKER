@@ -1,4 +1,3 @@
-import { View } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Card } from '@/components/ui/card';
 import { useAppForm } from '@/components/HookForm';
@@ -15,17 +14,24 @@ const schema = z.object({
 export default function WorkoutExerciseMap() {
   const append = useWorkoutExerciseStore((s) => s.upsert);
   const router = useRouter();
-  const { name: exerciseName, id } = useLocalSearchParams<{
+  const {
+    name: exerciseName,
+    id,
+    position,
+    sets,
+  } = useLocalSearchParams<{
     id: string;
     name: string;
+    position: string;
+    sets: string;
   }>();
   const name = Array.isArray(exerciseName) ? exerciseName[0] : (exerciseName ?? '');
 
   const form = useAppForm({
     defaultValues: {
       ExerciseName: name,
-      sets: '',
-      position: '',
+      sets: sets ? String(sets) : '',
+      position: position ? String(position) : '',
     },
     validators: {
       onChange: schema,
@@ -34,7 +40,7 @@ export default function WorkoutExerciseMap() {
       const obj = { sets: Number(value.sets), position: Number(value.position), id };
       append(obj);
       formApi.reset();
-      router.push('/(app)/(Workout)/CreateWorkout');
+      router.back();
     },
   });
 

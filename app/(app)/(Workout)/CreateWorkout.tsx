@@ -67,7 +67,11 @@ export default function CreateWorkout() {
   const exercises = useQuery({
     queryKey: ['getExercise'],
     enabled: !!userId,
-    queryFn: async () => await executeQuery<getExerciseType>('getExercise', { $userId: userId }),
+    queryFn: async () => {
+      const res = await executeQuery<getExerciseType>('getExercise', { $userId: userId });
+      resetExercise();
+      return res;
+    },
   });
 
   if (exercises.isError) toast.error('Failed To Fetch Exercises');
@@ -99,11 +103,11 @@ export default function CreateWorkout() {
     else {
       router.push({
         pathname: '/(app)/(Workout)/WorkoutExerciseMap',
-        params: { id: e.id, name: e.name },
+        params: { id: e.id, name: e.name, position: undefined, sets: undefined },
       });
     }
   };
-  console.log(exercises.data?.map((e) => e.name));
+  // console.log(exercises.data?.map((e) => e.name));
   return (
     <View className="w-full flex-1 px-5">
       <Card className="p-5">
@@ -145,7 +149,7 @@ export default function CreateWorkout() {
                   <Checkbox
                     checked={selectedExercises[e.id] !== undefined}
                     className="border-primary"
-                    onCheckedChange={() => {}}
+                    onCheckedChange={() => handlePress(e)}
                   />
                 }
               />

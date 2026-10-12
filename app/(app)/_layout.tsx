@@ -33,7 +33,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(Workout)/index"
+        name="(Workout)"
         options={{
           title: 'Workout',
           headerShown: true,
@@ -41,41 +41,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="dumbbell" size={size} color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="(Workout)/CreateWorkout"
-        options={{
-          title: 'Create Workout',
-          headerLeft: () => <BackButton path="/(app)/(Workout)" />,
-          headerShown: true,
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="(Workout)/WorkoutExerciseMap"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="(Workout)/EditWorkout"
-        options={{
-          title: 'Edit Workout',
-          headerLeft: () => <BackButton path="/(app)/(Workout)" />,
-          headerShown: true,
-          href: null,
-        }}
-      />
-
-      <Tabs.Screen
-        name="(Exercises)/EditExercise"
-        options={{
-          title: 'Edit Exercise',
-          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
-          headerShown: true,
-          href: null,
         }}
       />
 
@@ -88,6 +53,16 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => <Ionicons name="barbell" size={size} color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="(Exercises)/EditExercise"
+        options={{
+          title: 'Edit Exercise',
+          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
+          headerShown: true,
+          href: null,
+        }}
+      />
+
       <Tabs.Screen
         name="(Exercises)/CreateExercises"
         options={{
