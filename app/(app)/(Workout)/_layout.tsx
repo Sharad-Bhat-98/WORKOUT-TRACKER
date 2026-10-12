@@ -1,34 +1,32 @@
 import BackButton from '@/components/BackButton';
-import { Stack, Tabs } from 'expo-router';
-// this component is used beacuse router.back() was not working
+import AddButton from '@/components/AddButton';
+import { Stack } from 'expo-router';
+
 export default function WorkoutLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Tabs.Screen
-        name="(Workout)/CreateWorkout"
+    <Stack>
+      <Stack.Screen
+        name="index"
+        options={{
+          title: 'Workout',
+          headerRight: () => <AddButton path="/(app)/(Workout)/CreateWorkout" />,
+        }}
+      />
+      <Stack.Screen
+        name="CreateWorkout"
         options={{
           title: 'Create Workout',
           headerLeft: () => <BackButton path="/(app)/(Workout)" />,
-          headerShown: true,
-          href: null,
         }}
       />
-
-      <Tabs.Screen
-        name="(Workout)/WorkoutExerciseMap"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="(Workout)/EditWorkout"
+      <Stack.Screen
+        name="EditWorkout"
         options={{
           title: 'Edit Workout',
           headerLeft: () => <BackButton path="/(app)/(Workout)" />,
-          headerShown: true,
-          href: null,
         }}
       />
+      <Stack.Screen name="WorkoutExerciseMap" options={{ headerShown: false }} />
     </Stack>
   );
 }
