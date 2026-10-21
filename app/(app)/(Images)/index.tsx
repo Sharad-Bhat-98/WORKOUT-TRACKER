@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Image, ScrollView, View } from 'react-native';
+import { Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { toast } from 'sonner-native';
@@ -98,7 +98,7 @@ export default function UploadImage() {
   };
 
   return (
-    <View className="w-full flex-1 px-5">
+    <SafeAreaView className="w-full flex-1 px-5">
       <Card className="p-5">
         <form.AppForm>
           <form.AppField name="name">
@@ -134,7 +134,7 @@ export default function UploadImage() {
           />
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

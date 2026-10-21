@@ -6,13 +6,8 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import BackButton from '@/components/BackButton';
 import AddButton from '@/components/AddButton';
-import { useUserStore } from '@/store/user';
-import { Text } from '@/components/ui/text';
-import { View } from 'react-native';
 
 export default function TabLayout() {
-  const username = useUserStore((s) => s.username);
-
   return (
     <Tabs
       screenOptions={{
@@ -23,13 +18,7 @@ export default function TabLayout() {
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
-          headerShown: true,
-          headerTitle: () => (
-            <View>
-              <Text variant="h2">Hi {username}</Text>
-              <Text variant="muted">Lets Make Progress Today</Text>
-            </View>
-          ),
+          headerShown: false,
         }}
       />
       <Tabs.Screen

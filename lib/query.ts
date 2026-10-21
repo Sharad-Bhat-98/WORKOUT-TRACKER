@@ -53,7 +53,7 @@ export const INIT_SQL = [
     exercise_id TEXT NOT NULL,
     set_no INTEGER NOT NULL CHECK (set_no > 0),
     reps INTEGER NOT NULL CHECK (reps >= 0),
-    weight REAL,
+    weight REAL NOT NULL,
     logged_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UNIQUE (session_id, exercise_id, set_no),
     FOREIGN KEY (session_id) REFERENCES workout_sessions(id) ON DELETE CASCADE,
@@ -82,7 +82,6 @@ const QUERY: Record<string, string> = {
   createWorkout:
     'INSERT INTO workouts (id , name , user_id , description , image) VALUES ($id , $name , $user_id , $description, $image);',
   deleteWorkout: 'delete from workouts where id = $id',
-  deleteExercisesForWorkout: 'delete from exercises where workout_id = $id',
   updateWorkout: 'update workouts set name = $name, description = $description where id = $id',
   getWorkoutById: 'select id , name , description from workouts where id = $id',
   getWorkoutExerciseById:
@@ -114,6 +113,61 @@ const QUERY: Record<string, string> = {
   `,
   deleteWorkoutExercise:
     'delete from workout_exercises where exercise_id = $exeriseId and workout_id = $workoutId',
+  getWorkoutDetails: `
+          SELECT workouts.id,
+                   workouts.name,
+                   images.data,
+                   count(workout_exercises.exercise_id) AS count,
+                   group_concat(workout_exercises.exercise_id, ',' ORDER BY workout_exercises.position) AS exerciseId
+            FROM workouts
+            LEFT JOIN images ON images.name = workouts.image
+            LEFT JOIN workout_exercises ON workouts.id = workout_exercises.workout_id
+            WHERE workouts.user_id = $userid
+            GROUP BY workouts.id
+            ORDER BY workouts.created_at DESC;
+  `,
+  getExerciseSessionDetails: `SELECT
+                                exercises.name as ExerciseName,
+                                images.data as ImageData,
+                                workouts.name as WorkoutName,
+                                workout_exercises.target_sets as TargetSets
+                              FROM workout_exercises
+                              LEFT JOIN exercises on exercises.id = workout_exercises.exercise_id
+                              LEFT JOIN images on images.name = exercises.image
+                              LEFT JOIN workouts on workouts.id = workout_exercises.workout_id
+                              where exercise_id = $ExerciseId
+                              and
+                              workout_id = $WorkoutId`,
+  createSession: 'INSERT INTO workout_sessions (id , workout_id) VALUES ($id , $WorkoutId)',
+  updateSessionEndTime:
+    "UPDATE workout_sessions SET ended_at = datetime('now') where id = $SessionId",
+  getPrevSessionIds: `SELECT id
+                    FROM workout_sessions
+                    WHERE workout_id = $WorkoutId
+                      AND id != $SessionId
+                      AND ended_at IS NOT NULL
+                    ORDER BY started_at DESC
+                    LIMIT 4`,
+  getPrevSessionExerciseDetails: `SELECT set_no , reps , weight
+                                  from set_logs where
+                                  session_id = $PrevSession
+                                  AND
+                                  exercise_id = $ExerciseId
+                                  ORDER BY set_no`,
+  insertSetLog:
+    'INSERT INTO set_logs (id , session_id , exercise_id , set_no , reps , weight) VALUES ($id , $SessionId , $ExerciseId , $SetNo , $Reps , $Weight)',
+  getPrevSetDetails: `
+                      SELECT session_id,
+                             date(MIN(logged_at), 'localtime')  AS logged_at,
+                             MAX(weight * (1 + reps / 30.0))    AS est_1rm,
+                             MAX(weight)                        AS max_weight,
+                             SUM(reps)                          AS total_reps,
+                             SUM(weight * reps)                 AS volume
+                      FROM set_logs
+                      WHERE session_id IN (SELECT value FROM json_each($SessionIds))
+                        AND exercise_id = $ExerciseId
+                      GROUP BY session_id
+                      ORDER BY logged_at`,
 };
 
 export default QUERY;

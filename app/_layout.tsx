@@ -22,7 +22,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 SplashScreen.preventAutoHideAsync();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({ defaultOptions: { mutations: { retry: 0 } } });
 export default function RootLayout() {
   const { colorScheme } = useColorScheme();
   const [ready, setReady] = useState(false);

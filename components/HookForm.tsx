@@ -153,13 +153,13 @@ function NativeSelectScrollView({ className, ...props }: React.ComponentProps<ty
   return <ScrollView className={cn('max-h-52', className)} {...props} />;
 }
 
-function SubmitButton({ title }: { title: string }) {
+function SubmitButton({ title, disabled = false }: { title: string; disabled?: boolean }) {
   const form = useFormContext();
 
   return (
     <form.Subscribe selector={(state) => state.canSubmit && !state.isSubmitting}>
       {(canSubmit) => (
-        <Button onPress={() => void form.handleSubmit()} disabled={!canSubmit}>
+        <Button onPress={() => void form.handleSubmit()} disabled={!canSubmit || disabled}>
           <Text>{title}</Text>
         </Button>
       )}
