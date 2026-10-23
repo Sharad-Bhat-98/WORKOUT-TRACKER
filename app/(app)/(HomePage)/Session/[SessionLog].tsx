@@ -12,7 +12,7 @@ import {
   handleNextExerciseType,
   prevSessionRepsDetailsType,
 } from '@/types/types';
-import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Image, View } from 'react-native';
@@ -39,6 +39,7 @@ export default function SessionLog() {
   const currentIndex = useWorkoutSessionStore((s) => s.index);
   const setNextExercise = useWorkoutSessionStore((s) => s.setNextExercise);
   const reset = useWorkoutSessionStore((s) => s.reset);
+  const queryClient = useQueryClient();
   const isLast = exersiseList.length - 1 === currentIndex;
   const pageDetails = useQuery({
     enabled: Boolean(exerciseId && workoutId),
@@ -97,6 +98,7 @@ export default function SessionLog() {
     onSuccess: () => {
       if (isLast) {
         reset();
+        queryClient.invalidateQueries({ queryKey: ['getPrevSessions'] });
         router.replace('/(app)/(HomePage)');
       } else {
         const nextExercise = setNextExercise();

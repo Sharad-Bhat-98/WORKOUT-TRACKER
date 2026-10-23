@@ -23,8 +23,9 @@ export type ImageDeleteCardType = {
   title: string;
   imageData: string;
   handlePress?: () => void;
-  description?: string;
+  description?: ReactNode;
   footer?: ReactNode;
+  className?: string;
 };
 
 export type BackButtonType = {
@@ -81,4 +82,42 @@ export type executeInsertUpdateOneTransactionType = {
 export type handleNextExerciseType = {
   sql: string;
   args: Record<string, string | number>;
+};
+
+export type getPrevSessionsType = {
+  id: string;
+  name: string;
+  workout_id: string;
+  started_at: string;
+  ended_at: string;
+  data: string;
+};
+
+export type getsessionDetailsType = {
+  id: string;
+  started_at: string;
+  ended_at: string | null;
+  workout_name: string;
+  exercise_id: string | null;
+  exercise_name: string | null;
+  image: string | null;
+  set_no: number | null;
+  reps: number | null;
+  weight: number | null;
+};
+
+export type sessionDetailsSetType = {
+  name: string | null;
+  image: string | null;
+  set_no: number | null;
+  weight: number | null;
+  reps: number | null;
+};
+
+export type sessionDetailsType = {
+  sessionId: string;
+  started_at: string;
+  ended_at: string | null;
+  workout_name: string;
+  exercises: Record<string, sessionDetailsSetType[]>;
 };

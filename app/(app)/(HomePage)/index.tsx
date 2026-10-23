@@ -12,6 +12,8 @@ import useWorkoutSessionStore from '@/store/WorkoutSession';
 import { toast } from 'sonner-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Crypto from 'expo-crypto';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
   const { colorScheme } = useColorScheme();
@@ -58,11 +60,22 @@ export default function Home() {
         <Text variant="h2"> LOADING .....</Text>
       ) : (
         <View className="flex-1 gap-2">
-          <View>
-            <Text variant="h2">Hi {username}</Text>
-            <Text variant="muted">Lets Make Progress Today</Text>
-          </View>
+          <Text variant="h2" className="border-b-0 pb-0">
+            Hi {username}
+          </Text>
+          <Text variant="muted">Lets Make Progress Today</Text>
+
           <ScrollView className="flex-1" contentContainerClassName="gap-2">
+            <View className="w-full flex-row items-center">
+              <Separator className="w-[70%]" />
+              <Button
+                variant="ghost"
+                className="w-[30%] shrink px-1"
+                onPress={() => router.push('/(app)/(PrevSessions)')}>
+                <Text className="text-center">Prev Sessions</Text>
+              </Button>
+            </View>
+
             {query.isError ? (
               <Text>Failed To Fetch Data</Text>
             ) : (

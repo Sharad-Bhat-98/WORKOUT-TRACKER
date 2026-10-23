@@ -139,6 +139,7 @@ const QUERY: Record<string, string> = {
                               and
                               workout_id = $WorkoutId`,
   createSession: 'INSERT INTO workout_sessions (id , workout_id) VALUES ($id , $WorkoutId)',
+  deleteSession: 'DELETE FROM workout_sessions WHERE id = $id',
   updateSessionEndTime:
     "UPDATE workout_sessions SET ended_at = datetime('now') where id = $SessionId",
   getPrevSessionIds: `SELECT id
@@ -156,6 +157,11 @@ const QUERY: Record<string, string> = {
                                   ORDER BY set_no`,
   insertSetLog:
     'INSERT INTO set_logs (id , session_id , exercise_id , set_no , reps , weight) VALUES ($id , $SessionId , $ExerciseId , $SetNo , $Reps , $Weight)',
+  updateSetLog: `UPDATE set_logs
+                 SET reps = $reps, weight = $weight
+                 WHERE session_id = $sessionId
+                   AND exercise_id = $exerciseId
+                   AND set_no = $setNo`,
   getPrevSetDetails: `
                       SELECT session_id,
                              date(MIN(logged_at), 'localtime')  AS logged_at,
@@ -168,6 +174,38 @@ const QUERY: Record<string, string> = {
                         AND exercise_id = $ExerciseId
                       GROUP BY session_id
                       ORDER BY logged_at`,
+  getPrevSessions: `  SELECT
+                        workout_sessions.id,
+                        workouts.name,
+                        workout_sessions.workout_id,
+                        strftime('%Y-%m-%d %H:%M', workout_sessions.started_at) AS started_at,
+                        strftime('%Y-%m-%d %H:%M', workout_sessions.ended_at) AS ended_at,
+                        images.data
+                      FROM workout_sessions
+                      LEFT JOIN workouts ON workouts.id = workout_sessions.workout_id
+                      LEFT JOIN images ON images.name = workouts.image
+                      ORDER BY workout_sessions.started_at DESC
+                      LIMIT $limit OFFSET $offset`,
+  getsessionDetails: `
+                    SELECT
+                      workout_sessions.id,
+                      strftime('%Y-%m-%d %H:%M', workout_sessions.started_at) AS started_at,
+                      strftime('%Y-%m-%d %H:%M', workout_sessions.ended_at) AS ended_at,
+                      workouts.name AS workout_name,
+                      exercises.id AS exercise_id,
+                      exercises.name AS exercise_name,
+                      images.data AS image,
+                      set_logs.set_no,
+                      set_logs.reps,
+                      set_logs.weight
+                    FROM workout_sessions
+                    LEFT JOIN workouts ON workouts.id = workout_sessions.workout_id
+                    LEFT JOIN set_logs ON set_logs.session_id = workout_sessions.id
+                    LEFT JOIN exercises ON exercises.id = set_logs.exercise_id
+                    LEFT JOIN images ON images.name = exercises.image
+                    WHERE workout_sessions.id = $id
+                    ORDER BY exercises.name, set_logs.set_no
+                  `,
 };
 
 export default QUERY;
