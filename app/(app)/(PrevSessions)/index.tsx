@@ -65,7 +65,7 @@ export default function PrevSessionIndex() {
         }}
 
         onEndReachedThreshold={0.4}
-        ListFooterComponent={query.isFetchingNextPage ? <Text>Loading more…</Text> : null}
+        ListFooterComponent={query.isFetchingNextPage ? <Text>Loading more…</Text> : undefined}
         renderItem={({ item }) => (
           <Pressable>
             <ImageCard

@@ -4,8 +4,6 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import BackButton from '@/components/BackButton';
-import AddButton from '@/components/AddButton';
 
 export default function TabLayout() {
   return (
@@ -39,45 +37,32 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="(Exercises)/index"
+        name="(Exercises)"
         options={{
           title: 'Exercise',
-          headerShown: true,
-          headerRight: () => <AddButton path="/(app)/(Exercises)/CreateExercises" />,
-          tabBarIcon: ({ color, size }) => <Ionicons name="barbell" size={size} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="(Exercises)/EditExercise"
-        options={{
-          title: 'Edit Exercise',
-          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
-          headerShown: true,
-          href: null,
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="barbell" size={size} color={color as string} />
+          ),
         }}
       />
 
       <Tabs.Screen
-        name="(Exercises)/CreateExercises"
-        options={{
-          title: 'Create Exercises',
-          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
-          headerShown: true,
-          href: null,
-        }}
-      />
-      <Tabs.Screen
         name="Progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ color, size }) => <Entypo name="bar-graph" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Entypo name="bar-graph" size={size} color={color as string} />
+          ),
         }}
       />
       <Tabs.Screen
         name="(Images)/index"
         options={{
           title: 'Upload Image',
-          tabBarIcon: ({ color, size }) => <Entypo name="image" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Entypo name="image" size={size} color={color as string} />
+          ),
           headerShown: true,
         }}
       />

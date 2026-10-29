@@ -6,7 +6,7 @@ import { BackButtonType } from '@/types/types';
 export default function AddButton({ path }: BackButtonType) {
   const router = useRouter();
   return (
-    <Button size="icon" className="mr-5 rounded-full" onPress={() => router.push(path)}>
+    <Button size="icon" className="mr-5 rounded-full" onPress={() => router.replace(path)}>
       <AntDesign name="plus" size={24} />
     </Button>
   );

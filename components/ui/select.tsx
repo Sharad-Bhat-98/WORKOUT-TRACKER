@@ -115,12 +115,12 @@ function SelectContent({
                   className
                 )}
                 position={position}
-                style={[
-                  Platform.OS !== 'web' && triggerPosition
+                style={{
+                  ...(Platform.OS !== 'web' && triggerPosition
                     ? { width: triggerPosition.width }
-                    : undefined,
-                  style,
-                ]}
+                    : undefined),
+                  ...style,
+                }}
                 {...props}>
                 <SelectScrollUpButton />
                 <SelectPrimitive.Viewport

@@ -9,7 +9,11 @@ export default function BackButton({ path }: BackButtonType) {
   const { colorScheme } = useColorScheme();
 
   return (
-    <Button size="icon" variant="ghost" className="rounded-full" onPress={() => router.push(path)}>
+    <Button
+      size="icon"
+      variant="ghost"
+      className="rounded-full"
+      onPress={() => router.replace(path)}>
       <AntDesign name="arrow-left" size={24} color={colorScheme === 'light' ? 'black' : 'white'} />
     </Button>
   );
