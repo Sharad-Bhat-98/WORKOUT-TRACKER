@@ -3,7 +3,7 @@ import { Tabs } from 'expo-router';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabLayout() {
   return (
@@ -42,7 +42,7 @@ export default function TabLayout() {
           title: 'Exercise',
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="barbell" size={size} color={color as string} />
+            <MaterialIcons name="sports-gymnastics" size={size} color={color as string} />
           ),
         }}
       />
