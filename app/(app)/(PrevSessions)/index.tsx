@@ -17,7 +17,6 @@ import { useRouter } from 'expo-router';
 import { Pencil, Trash2 } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import { FlatList, Pressable, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 import { Icon } from '@/components/ui/icon';
 

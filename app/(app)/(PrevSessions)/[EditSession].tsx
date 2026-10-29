@@ -1,12 +1,15 @@
+import { EndSessionPicker } from '@/components/DateTimePicker';
 import { useAppForm } from '@/components/HookForm';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
-import executeQuery, { executeInsertUpdateOneTransaction } from '@/lib/database';
+import executeQuery, {
+  executeInsertUpdate,
+  executeInsertUpdateOneTransaction,
+} from '@/lib/database';
 import { getsessionDetailsType, sessionDetailsSetType, sessionDetailsType } from '@/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
 import { Image, ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 import { z } from 'zod';
 
@@ -28,6 +31,7 @@ const schema = z.object({
 
 export default function EditSession() {
   const { EditSession: sessionId } = useLocalSearchParams<{ EditSession: string }>();
+  const queryClient = useQueryClient();
 
   const sessionDetails = useQuery({
     queryKey: ['getsessionDetails', sessionId],
@@ -66,6 +70,16 @@ export default function EditSession() {
   const session = sessionDetails.data;
   const exercises = Object.entries(session?.exercises ?? {});
 
+  const updateEndTime = useMutation({
+    mutationFn: (date: string) =>
+      executeInsertUpdate('updateSessionEndedAt', { $endedAt: date, $id: sessionId }),
+    onSuccess: () => {
+      toast.success('Session Time Updated');
+      queryClient.invalidateQueries({ queryKey: ['getsessionDetails', sessionId] });
+    },
+    onError: () => toast.error('Failed To Update Session Time'),
+  });
+
   return (
     <View className="flex-1">
       <ScrollView
@@ -93,6 +107,13 @@ export default function EditSession() {
                   </View>
                 </View>
               </CardHeader>
+            </Card>
+            <Card className="p-5">
+              <EndSessionPicker
+                disabled={updateEndTime.isPending}
+                endedAt={session.ended_at}
+                handlePress={updateEndTime}
+              />
             </Card>
 
             {exercises.map(([exerciseId, sets]) => (

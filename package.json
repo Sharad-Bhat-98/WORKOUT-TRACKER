@@ -10,8 +10,10 @@
     "clean": "rm -rf .expo node_modules"
   },
   "dependencies": {
+    "@expo/ui": "~56.0.26",
     "@expo/vector-icons": "^15.1.1",
     "@rn-primitives/checkbox": "^1.5.2",
+    "@rn-primitives/dialog": "^1.5.2",
     "@rn-primitives/dropdown-menu": "^1.5.2",
     "@rn-primitives/label": "^1.5.2",
     "@rn-primitives/popover": "^1.5.2",

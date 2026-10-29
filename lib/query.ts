@@ -142,6 +142,7 @@ const QUERY: Record<string, string> = {
   deleteSession: 'DELETE FROM workout_sessions WHERE id = $id',
   updateSessionEndTime:
     "UPDATE workout_sessions SET ended_at = datetime('now') where id = $SessionId",
+  updateSessionEndedAt: 'UPDATE workout_sessions SET ended_at = $endedAt WHERE id = $id',
   getPrevSessionIds: `SELECT id
                     FROM workout_sessions
                     WHERE workout_id = $WorkoutId
