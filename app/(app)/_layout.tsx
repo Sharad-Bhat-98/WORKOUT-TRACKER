@@ -4,6 +4,7 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function TabLayout() {
   return (
@@ -62,6 +63,16 @@ export default function TabLayout() {
           title: 'Upload Image',
           tabBarIcon: ({ color, size }) => (
             <Entypo name="image" size={size} color={color as string} />
+          ),
+          headerShown: true,
+        }}
+      />
+      <Tabs.Screen
+        name="(Profile)"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user-circle" size={size} color={color as string} />
           ),
           headerShown: true,
         }}

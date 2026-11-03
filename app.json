@@ -48,7 +48,8 @@
           "photosPermission": "Allow access to photos to attach an exercise image."
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true,
