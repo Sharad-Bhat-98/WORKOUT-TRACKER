@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { useAppForm } from '@/components/HookForm';
 import { View } from 'react-native';
 import * as Crypto from 'expo-crypto';
-import executeQuery, { executeInsertUpdate, importDb } from '@/lib/database';
+import executeQuery, {
+  executeInsertUpdate,
+  executeInsertUpdateOneTransaction,
+  importDb,
+} from '@/lib/database';
 import { useUserStore } from '@/store/user';
 import { IMAGES } from '@/assets/imageBase64';
 import { useMutation } from '@tanstack/react-query';
@@ -26,10 +30,11 @@ export default function Setup() {
       const id = Crypto.randomUUID();
       await executeInsertUpdate('CreateUser', { $id: id, $username: value.name });
       // insert all the default images
-      const promiseArr = Object.entries(IMAGES).map(([name, imageData]) =>
-        executeQuery('insertImage', { $name: name, $image_data: imageData })
-      );
-      await Promise.all(promiseArr);
+      const obj = Object.entries(IMAGES).map(([name, imageData]) => ({
+        sql: 'insertImage',
+        args: { $name: name, $image_data: imageData },
+      }));
+      await executeInsertUpdateOneTransaction(obj);
       userStore.setUser(id, value.name);
     },
   });
