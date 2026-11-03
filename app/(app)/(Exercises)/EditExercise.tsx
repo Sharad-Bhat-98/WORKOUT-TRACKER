@@ -1,6 +1,6 @@
 import { useAppForm } from '@/components/HookForm';
 import { Card } from '@/components/ui/card';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
+import useDatabase from '@/hooks/useDatabase';
 import { ImageType } from '@/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -22,6 +22,8 @@ type ExerciseDetails = {
 export default function EditExercise() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
+
   const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
   const id = Array.isArray(exerciseId) ? exerciseId[0] : exerciseId;
 

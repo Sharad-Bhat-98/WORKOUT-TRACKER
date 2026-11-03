@@ -15,15 +15,16 @@ import { ScrollView, View } from 'react-native';
 import { Pencil, Trash2 } from 'lucide-react-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useUserStore } from '@/store/user';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { toast } from 'sonner-native';
 import { getExerciseType } from '@/types/types';
+import useDatabase from '@/hooks/useDatabase';
 
 export default function Exercise() {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
   const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
 
   const exercises = useQuery({
     queryKey: ['getExercise'],

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Text } from '@/components/ui/text';
-import executeQuery, { executeInsertUpdateOneTransaction } from '@/lib/database';
 import useWorkoutSessionStore from '@/store/WorkoutSession';
 import {
   getExerciseSessionDetailsType,
@@ -21,6 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 import * as Crypto from 'expo-crypto';
 import { Skeleton } from '@/components/ui/skeleton';
+import useDatabase from '@/hooks/useDatabase';
 
 type submitArgs = {
   reps: number;
@@ -39,6 +39,8 @@ export default function SessionLog() {
   const currentIndex = useWorkoutSessionStore((s) => s.index);
   const setNextExercise = useWorkoutSessionStore((s) => s.setNextExercise);
   const reset = useWorkoutSessionStore((s) => s.reset);
+  const { executeQuery, executeInsertUpdateOneTransaction } = useDatabase();
+
   const queryClient = useQueryClient();
   const isLast = exersiseList.length - 1 === currentIndex;
   const pageDetails = useQuery({

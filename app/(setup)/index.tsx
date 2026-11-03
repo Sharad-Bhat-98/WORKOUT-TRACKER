@@ -2,23 +2,21 @@ import { z } from 'zod';
 import { useAppForm } from '@/components/HookForm';
 import { View } from 'react-native';
 import * as Crypto from 'expo-crypto';
-import executeQuery, {
-  executeInsertUpdate,
-  executeInsertUpdateOneTransaction,
-  importDb,
-} from '@/lib/database';
 import { useUserStore } from '@/store/user';
 import { IMAGES } from '@/assets/imageBase64';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner-native';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
+import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
   name: z.string().min(3),
 });
 export default function Setup() {
   const userStore = useUserStore();
+  const { executeInsertUpdate, executeInsertUpdateOneTransaction, importDb } = useDatabase();
+
   const form = useAppForm({
     defaultValues: {
       name: '',

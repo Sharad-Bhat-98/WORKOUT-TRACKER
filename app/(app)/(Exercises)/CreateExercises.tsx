@@ -3,12 +3,12 @@ import { Card } from '@/components/ui/card';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import * as Crypto from 'expo-crypto';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { useUserStore } from '@/store/user';
 import { toast } from 'sonner-native';
 import { z } from 'zod';
 import { ImageType } from '@/types/types';
 import { View } from 'react-native';
+import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
   name: z.string().min(3),
@@ -19,6 +19,7 @@ export default function CreateExercise() {
   const router = useRouter();
   const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
 
   const imagesQuery = useQuery({
     queryKey: ['getImages'],

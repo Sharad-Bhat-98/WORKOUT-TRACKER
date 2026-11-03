@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { Card } from '@/components/ui/card';
 import { useAppForm } from '@/components/HookForm';
 import { z } from 'zod';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import * as Crypto from 'expo-crypto';
 import { useUserStore } from '@/store/user';
 import { toast } from 'sonner-native';
@@ -13,6 +12,7 @@ import { getExerciseType, ImageType } from '@/types/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import ImageCard from '@/components/ImageCard';
 import useWorkoutExerciseStore from '@/store/WorkoutExerciseMap';
+import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
   name: z.string(),
@@ -23,6 +23,8 @@ export default function CreateWorkout() {
   const router = useRouter();
   const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
+
   const selectedExercises = useWorkoutExerciseStore((s) => s.formData);
   const resetExercise = useWorkoutExerciseStore((s) => s.reset);
   const deleteExercise = useWorkoutExerciseStore((s) => s.remove);

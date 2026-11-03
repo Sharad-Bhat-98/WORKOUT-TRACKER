@@ -8,7 +8,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Text } from '@/components/ui/text';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import useWorkoutSessionStore from '@/store/WorkoutSession';
 import { getPrevSessionsType } from '@/types/types';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -19,6 +18,7 @@ import { useColorScheme } from 'nativewind';
 import { FlatList, Pressable, View } from 'react-native';
 import { toast } from 'sonner-native';
 import { Icon } from '@/components/ui/icon';
+import useDatabase from '@/hooks/useDatabase';
 
 const PAGE_SIZE = 20;
 export default function PrevSessionIndex() {
@@ -26,6 +26,7 @@ export default function PrevSessionIndex() {
   const { colorScheme } = useColorScheme();
   const queryClient = useQueryClient();
   const resetSession = useWorkoutSessionStore((s) => s.reset);
+  const { executeQuery, executeInsertUpdate } = useDatabase();
 
   const query = useInfiniteQuery({
     queryKey: ['getPrevSessions'],

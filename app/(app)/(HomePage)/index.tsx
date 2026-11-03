@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { useUserStore } from '@/store/user';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Pressable, ScrollView, View } from 'react-native';
@@ -14,6 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Crypto from 'expo-crypto';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import useDatabase from '@/hooks/useDatabase';
 
 export default function Home() {
   const { colorScheme } = useColorScheme();
@@ -22,6 +22,8 @@ export default function Home() {
   const username = useUserStore((s) => s.username);
   const setInitialValue = useWorkoutSessionStore((s) => s.setInitialValue);
   const reset = useWorkoutSessionStore((s) => s.reset);
+  const { executeQuery, executeInsertUpdate } = useDatabase();
+
   const query = useQuery({
     queryKey: ['getWorkoutDetails', userId],
     enabled: !!userId, // wait until the user ID is loaded

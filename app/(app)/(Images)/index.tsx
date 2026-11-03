@@ -5,7 +5,6 @@ import { Text } from '@/components/ui/text';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { toast } from 'sonner-native';
 import { z } from 'zod';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -16,6 +15,7 @@ import { ImageType } from '@/types/types';
 
 import { Icon } from '@/components/ui/icon';
 import { Trash2 } from 'lucide-react-native';
+import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
   name: z.string(),
@@ -25,6 +25,7 @@ export default function UploadImage() {
   const queryClient = useQueryClient();
   const [image, setImage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const { executeQuery, executeInsertUpdate } = useDatabase();
 
   const imageData = useQuery({
     queryKey: ['getImages'],

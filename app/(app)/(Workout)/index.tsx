@@ -1,9 +1,7 @@
 import { Text } from '@/components/ui/text';
-import { ScrollView, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'expo-router';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { useUserStore } from '@/store/user';
 import Entypo from '@expo/vector-icons/Entypo';
 import { useColorScheme } from 'nativewind';
@@ -19,11 +17,14 @@ import { Pencil, Trash2 } from 'lucide-react-native';
 import { toast } from 'sonner-native';
 import { WorkoutType } from '@/types/types';
 import ImageCard from '@/components/ImageCard';
+import useDatabase from '@/hooks/useDatabase';
 
 export default function Workout() {
   const router = useRouter();
   const { colorScheme } = useColorScheme();
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
+
   const userId = useUserStore((s) => s.user_id);
 
   const query = useQuery({

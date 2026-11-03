@@ -1,11 +1,13 @@
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
-import { exportDb, importDb } from '@/lib/database';
+import useDatabase from '@/hooks/useDatabase';
 import { useMutation } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { toast } from 'sonner-native';
 
 export default function Profile() {
+  const { exportDb, importDb } = useDatabase();
+
   const exportQuery = useMutation({
     mutationFn: async () => await exportDb(),
     onSuccess: () => toast.success('Database Exported'),

@@ -2,10 +2,7 @@ import { EndSessionPicker } from '@/components/DateTimePicker';
 import { useAppForm } from '@/components/HookForm';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Text } from '@/components/ui/text';
-import executeQuery, {
-  executeInsertUpdate,
-  executeInsertUpdateOneTransaction,
-} from '@/lib/database';
+import useDatabase from '@/hooks/useDatabase';
 import { getsessionDetailsType, sessionDetailsSetType, sessionDetailsType } from '@/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams } from 'expo-router';
@@ -32,6 +29,7 @@ const schema = z.object({
 export default function EditSession() {
   const { EditSession: sessionId } = useLocalSearchParams<{ EditSession: string }>();
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
 
   const sessionDetails = useQuery({
     queryKey: ['getsessionDetails', sessionId],
@@ -142,6 +140,7 @@ function ExerciseCard({
 }) {
   const queryClient = useQueryClient();
   const loggedSets = sets.filter((set) => set.set_no != null);
+  const { executeInsertUpdateOneTransaction } = useDatabase();
 
   const saveSets = useMutation({
     mutationFn: async (value: z.infer<typeof schema>) => {

@@ -3,7 +3,6 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Card } from '@/components/ui/card';
 import { useAppForm } from '@/components/HookForm';
 import { z } from 'zod';
-import executeQuery, { executeInsertUpdate } from '@/lib/database';
 import { toast } from 'sonner-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Text } from '@/components/ui/text';
@@ -13,6 +12,7 @@ import { getExerciseType, getWorkoutByIdType } from '@/types/types';
 import { useUserStore } from '@/store/user';
 import useWorkoutExerciseStore, { WorkoutExercise } from '@/store/WorkoutExerciseMap';
 import { useState } from 'react';
+import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
   name: z.string().min(3, 'Workout name must be at least 3 characters'),
@@ -22,6 +22,7 @@ const schema = z.object({
 export default function EditWorkout() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { executeQuery, executeInsertUpdate } = useDatabase();
   const { id: workoutId } = useLocalSearchParams<{ id: string }>();
   const id = Array.isArray(workoutId) ? workoutId[0] : workoutId;
   const userId = useUserStore((s) => s.user_id);
