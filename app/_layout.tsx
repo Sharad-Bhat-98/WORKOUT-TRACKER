@@ -55,7 +55,6 @@ const RootNavigator = () => {
     }
   }, [userId]);
 
-  console.log(userId, 'S16 user id');
   useEffect(() => {
     if (ready) SplashScreen.hideAsync();
   }, [ready]);
