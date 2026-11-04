@@ -45,14 +45,18 @@ const RootNavigator = () => {
   const setUser = useUserStore((s) => s.setUser);
   const { initDb, executeQuery } = useDatabase();
   useEffect(() => {
+    let cancelled = false;
     if (!userId) {
       (async () => {
         await initDb();
         const res = await executeQuery<{ id: string; name: string }>('CheckForUser', {});
-        if (res.length > 0) setUser(res[0]?.id ?? '', res[0]?.name ?? '');
-        setReady(true);
+        if (!cancelled && res[0]?.id) setUser(res[0].id, res[0].name);
+        if (!cancelled) setReady(true);
       })();
     }
+    return () => {
+      cancelled = true;
+    };
   }, [userId]);
 
   useEffect(() => {
