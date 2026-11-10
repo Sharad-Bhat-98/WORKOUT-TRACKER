@@ -32,7 +32,7 @@ export default function Exercise() {
     queryFn: async () => await executeQuery<getExerciseType>('getExercise', { $userId: userId }),
   });
 
-  if (exercises.isError) toast.error('Failed To Fetch Exercises');
+  // if (exercises.isError) toast.error('Failed To Fetch Exercises');
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => await executeInsertUpdate('deleteExercise', { $id: id }),

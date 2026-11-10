@@ -14,6 +14,7 @@ import * as Crypto from 'expo-crypto';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import useDatabase from '@/hooks/useDatabase';
+import dayjs from 'dayjs';
 
 export default function Home() {
   const { colorScheme } = useColorScheme();
@@ -46,7 +47,11 @@ export default function Home() {
         $SessionId: id,
       });
       const prevSessions = prevSessionRes.map((e) => e.id);
-      await executeInsertUpdate('createSession', { $WorkoutId: e.id, $id: id });
+      await executeInsertUpdate('createSession', {
+        $WorkoutId: e.id,
+        $id: id,
+        $startTime: dayjs().toISOString(),
+      });
       reset();
       setInitialValue(id, e.id, firstExercise, prevSessions, exerciseList ?? []);
       router.replace(`/Session/${firstExercise}`);
@@ -73,7 +78,7 @@ export default function Home() {
               <Button
                 variant="ghost"
                 className="w-[30%] shrink px-1"
-                onPress={() => router.push('/(app)/(PrevSessions)')}>
+                onPress={() => router.push('/PrevSessions')}>
                 <Text className="text-center">Prev Sessions</Text>
               </Button>
             </View>

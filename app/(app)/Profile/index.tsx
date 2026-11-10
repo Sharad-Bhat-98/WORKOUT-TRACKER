@@ -4,6 +4,7 @@ import useDatabase from '@/hooks/useDatabase';
 import { useMutation } from '@tanstack/react-query';
 import { View } from 'react-native';
 import { toast } from 'sonner-native';
+import * as Updates from 'expo-updates';
 
 export default function Profile() {
   const { exportDb, importDb } = useDatabase();
@@ -19,7 +20,12 @@ export default function Profile() {
 
   const importQuery = useMutation({
     mutationFn: async () => await importDb(),
-    onSuccess: () => toast.success('Database Imported Please Restart The Application'),
+    onSuccess: async (data) => {
+      if (data) {
+        toast.success('Database Imported Restarting The Application');
+        await Updates.reloadAsync();
+      } else toast.warning('No Database Was Selected');
+    },
     onError: (err) => {
       console.error(err);
       toast.error('Failed To Import Database');

@@ -21,9 +21,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(PrevSessions)"
+        name="PrevSessions"
         options={{
-          href: null,
+          tabBarItemStyle: { display: 'none' },
         }}
       />
       <Tabs.Screen
@@ -58,7 +58,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(Images)/index"
+        name="Images"
         options={{
           title: 'Upload Image',
           tabBarIcon: ({ color, size }) => (
@@ -68,7 +68,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(Profile)"
+        name="Profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, size }) => (

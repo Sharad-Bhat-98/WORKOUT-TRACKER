@@ -138,10 +138,10 @@ const QUERY: Record<string, string> = {
                               where exercise_id = $ExerciseId
                               and
                               workout_id = $WorkoutId`,
-  createSession: 'INSERT INTO workout_sessions (id , workout_id) VALUES ($id , $WorkoutId)',
+  createSession:
+    'INSERT INTO workout_sessions (id , workout_id , started_at) VALUES ($id , $WorkoutId , $startTime)',
   deleteSession: 'DELETE FROM workout_sessions WHERE id = $id',
-  updateSessionEndTime:
-    "UPDATE workout_sessions SET ended_at = datetime('now') where id = $SessionId",
+  updateSessionEndTime: 'UPDATE workout_sessions SET ended_at = $endedAt where id = $SessionId',
   updateSessionEndedAt: 'UPDATE workout_sessions SET ended_at = $endedAt WHERE id = $id',
   getPrevSessionIds: `SELECT id
                     FROM workout_sessions
@@ -179,8 +179,8 @@ const QUERY: Record<string, string> = {
                         workout_sessions.id,
                         workouts.name,
                         workout_sessions.workout_id,
-                        strftime('%Y-%m-%d %H:%M', workout_sessions.started_at) AS started_at,
-                        strftime('%Y-%m-%d %H:%M', workout_sessions.ended_at) AS ended_at,
+                        workout_sessions.started_at AS started_at,
+                        workout_sessions.ended_at AS ended_at,
                         images.data
                       FROM workout_sessions
                       LEFT JOIN workouts ON workouts.id = workout_sessions.workout_id
@@ -190,8 +190,8 @@ const QUERY: Record<string, string> = {
   getsessionDetails: `
                     SELECT
                       workout_sessions.id,
-                      strftime('%Y-%m-%d %H:%M', workout_sessions.started_at) AS started_at,
-                      strftime('%Y-%m-%d %H:%M', workout_sessions.ended_at) AS ended_at,
+                      workout_sessions.started_at AS started_at,
+                      workout_sessions.ended_at AS ended_at,
                       workouts.name AS workout_name,
                       exercises.id AS exercise_id,
                       exercises.name AS exercise_name,

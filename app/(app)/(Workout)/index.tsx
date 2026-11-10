@@ -39,6 +39,7 @@ export default function Workout() {
     onSuccess: () => {
       toast.success('Workout Deleted');
       queryClient.invalidateQueries({ queryKey: ['getWorkout'] });
+      queryClient.invalidateQueries({ queryKey: ['getWorkoutDetails', userId] });
     },
     onError: () => toast.error('Failed To Delete Workout'),
   });
@@ -49,7 +50,7 @@ export default function Workout() {
       ) : (
         query.data?.map((e) => (
           <ImageCard
-            key={e.name}
+            key={e.id}
             title={e.name}
             imageData={e.data}
             description={`${e.count} Exercises`}

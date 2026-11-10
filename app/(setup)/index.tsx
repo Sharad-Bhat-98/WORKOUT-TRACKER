@@ -9,13 +9,14 @@ import { toast } from 'sonner-native';
 import { Button } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import useDatabase from '@/hooks/useDatabase';
+import * as Updates from 'expo-updates';
 
 const schema = z.object({
   name: z.string().min(3),
 });
 export default function Setup() {
   const userStore = useUserStore();
-  const { executeInsertUpdate, executeInsertUpdateOneTransaction, importDb } = useDatabase();
+  const { executeInsertUpdateOneTransaction, importDb } = useDatabase();
 
   const form = useAppForm({
     defaultValues: {
@@ -26,20 +27,27 @@ export default function Setup() {
     },
     onSubmit: async ({ value }) => {
       const id = Crypto.randomUUID();
-      await executeInsertUpdate('CreateUser', { $id: id, $username: value.name });
       // insert all the default images
-      const obj = Object.entries(IMAGES).map(([name, imageData]) => ({
+      const arr = Object.entries(IMAGES).map(([name, imageData]) => ({
         sql: 'insertImage',
         args: { $name: name, $image_data: imageData },
       }));
-      await executeInsertUpdateOneTransaction(obj);
+      await executeInsertUpdateOneTransaction([
+        { sql: 'CreateUser', args: { $id: id, $username: value.name } },
+        ...arr,
+      ]);
       userStore.setUser(id, value.name);
     },
   });
 
   const importQuery = useMutation({
     mutationFn: async () => await importDb(),
-    onSuccess: () => toast.success('Database Imported Please Restart The Application'),
+    onSuccess: async (data) => {
+      if (data) {
+        toast.success('Database Imported Restarting The Application');
+        await Updates.reloadAsync();
+      } else toast.warning('No Database Was Selected');
+    },
     onError: (err) => {
       console.error(err);
       toast.error('Failed To Import Database');

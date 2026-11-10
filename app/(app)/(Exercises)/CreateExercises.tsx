@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { ImageType } from '@/types/types';
 import { View } from 'react-native';
 import useDatabase from '@/hooks/useDatabase';
+import { useEffect } from 'react';
 
 const schema = z.object({
   name: z.string().min(3),
@@ -63,6 +64,9 @@ export default function CreateExercise() {
     },
   });
 
+  useEffect(() => {
+    form.reset();
+  }, [form]);
   return (
     <View className="w-full px-5">
       <Card className="p-5">

@@ -5,10 +5,16 @@ import { z } from 'zod';
 import useWorkoutExerciseStore from '@/store/WorkoutExerciseMap';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+const positiveInt = (message: string) =>
+  z.string().refine((value) => {
+    const n = Number(value);
+    return Number.isInteger(n) && n > 0;
+  }, message);
+
 const schema = z.object({
   ExerciseName: z.string(),
-  sets: z.string().min(1, 'Number of sets is required'),
-  position: z.string(),
+  sets: positiveInt('Number of sets must be a whole number greater than 0'),
+  position: positiveInt('Position must be a whole number greater than 0'),
 });
 
 export default function WorkoutExerciseMap() {

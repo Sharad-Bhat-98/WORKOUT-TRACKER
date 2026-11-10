@@ -14,12 +14,13 @@ export { ErrorBoundary } from 'expo-router';
 import { useUserStore } from '@/store/user';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Toaster } from 'sonner-native';
+import { toast, Toaster } from 'sonner-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useDatabase from '@/hooks/useDatabase';
 import { SQLiteProvider } from 'expo-sqlite';
+import { BackHandler } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -48,10 +49,17 @@ const RootNavigator = () => {
     let cancelled = false;
     if (!userId) {
       (async () => {
-        await initDb();
-        const res = await executeQuery<{ id: string; name: string }>('CheckForUser', {});
-        if (!cancelled && res[0]?.id) setUser(res[0].id, res[0].name);
-        if (!cancelled) setReady(true);
+        try {
+          await initDb();
+          const res = await executeQuery<{ id: string; name: string }>('CheckForUser', {});
+          if (!cancelled && res[0]?.id) setUser(res[0].id, res[0].name);
+        } catch (err) {
+          console.error(err);
+          toast.error('Failed To Create Init Table');
+          BackHandler.exitApp(); // close the app works only on android
+        } finally {
+          if (!cancelled) setReady(true);
+        }
       })();
     }
     return () => {

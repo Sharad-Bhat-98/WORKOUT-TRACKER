@@ -8,22 +8,22 @@ import * as Crypto from 'expo-crypto';
 import { useUserStore } from '@/store/user';
 import { toast } from 'sonner-native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getExerciseType, ImageType } from '@/types/types';
+import { executeInsertUpdateOneTransactionType, getExerciseType, ImageType } from '@/types/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import ImageCard from '@/components/ImageCard';
 import useWorkoutExerciseStore from '@/store/WorkoutExerciseMap';
 import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
-  name: z.string(),
-  image: z.string(),
+  name: z.string().trim().min(1, 'Name is required'),
+  image: z.string().trim().min(1, 'Image is required'),
   description: z.string(),
 });
 export default function CreateWorkout() {
   const router = useRouter();
   const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
-  const { executeQuery, executeInsertUpdate } = useDatabase();
+  const { executeQuery, executeInsertUpdateOneTransaction } = useDatabase();
 
   const selectedExercises = useWorkoutExerciseStore((s) => s.formData);
   const resetExercise = useWorkoutExerciseStore((s) => s.reset);
@@ -32,28 +32,35 @@ export default function CreateWorkout() {
   const createMutation = useMutation({
     mutationFn: async (value: { name: string; description: string; image: string }) => {
       const id = Crypto.randomUUID();
-      await executeInsertUpdate('createWorkout', {
-        $id: id,
-        $name: value.name,
-        $user_id: userId,
-        $description: value.description,
-        $image: value.image,
-      });
-      const promiseArr = Object.values(selectedExercises).map((value) => {
-        return executeInsertUpdate('insertWorkoutExercises', {
+      const createWorkoutObj: executeInsertUpdateOneTransactionType = {
+        sql: 'createWorkout',
+        args: {
+          $id: id,
+          $name: value.name,
+          $user_id: userId ?? '',
+          $description: value.description,
+          $image: value.image,
+        },
+      };
+      const promiseArr: executeInsertUpdateOneTransactionType[] = Object.values(
+        selectedExercises
+      ).map((value) => ({
+        sql: 'insertWorkoutExercises',
+        args: {
           $WorkoutId: id,
           $ExerciseId: value.id,
           $Position: value.position,
           $Sets: value.sets,
-        });
-      });
-      await Promise.allSettled(promiseArr);
+        },
+      }));
+      await executeInsertUpdateOneTransaction([createWorkoutObj, ...promiseArr]);
     },
     onSuccess: () => {
       toast.success('Workout Created');
       resetExercise();
       queryClient.invalidateQueries({ queryKey: ['getWorkout'] });
-      router.push('/(app)/(Workout)');
+      queryClient.invalidateQueries({ queryKey: ['getWorkoutDetails'] });
+      router.replace('/(app)/(Workout)');
     },
     onError: (err) => {
       console.error(err);
@@ -69,14 +76,10 @@ export default function CreateWorkout() {
   const exercises = useQuery({
     queryKey: ['getExercise'],
     enabled: !!userId,
-    queryFn: async () => {
-      const res = await executeQuery<getExerciseType>('getExercise', { $userId: userId });
-      resetExercise();
-      return res;
-    },
+    queryFn: async () => await executeQuery<getExerciseType>('getExercise', { $userId: userId }),
   });
 
-  if (exercises.isError) toast.error('Failed To Fetch Exercises');
+  // if (exercises.isError) toast.error('Failed To Fetch Exercises');
 
   const form = useAppForm({
     defaultValues: {

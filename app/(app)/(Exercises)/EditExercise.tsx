@@ -44,7 +44,7 @@ export default function EditExercise() {
       toast.success('Exercise Updated');
       queryClient.invalidateQueries({ queryKey: ['getExercise'] });
       queryClient.invalidateQueries({ queryKey: ['exercises', id] });
-      router.push('/(app)/(Exercises)');
+      router.replace('/(app)/(Exercises)');
     },
     onError: (err) => {
       console.error(err);
@@ -76,6 +76,7 @@ export default function EditExercise() {
       const res = await executeQuery<ExerciseDetails>('getExerciseById', { $id: id });
       const exercise = res[0];
       if (!exercise) return;
+      form.reset();
       form.setFieldValue('name', exercise.name);
       form.setFieldValue('image', exercise.image ?? '');
       return res;

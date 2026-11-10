@@ -11,7 +11,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { getExerciseType, getWorkoutByIdType } from '@/types/types';
 import { useUserStore } from '@/store/user';
 import useWorkoutExerciseStore, { WorkoutExercise } from '@/store/WorkoutExerciseMap';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useDatabase from '@/hooks/useDatabase';
 
 const schema = z.object({
@@ -33,6 +33,7 @@ export default function EditWorkout() {
   const resetExercise = useWorkoutExerciseStore((s) => s.reset);
   const deleteExercise = useWorkoutExerciseStore((s) => s.remove);
   const updateMultiple = useWorkoutExerciseStore((s) => s.updateMultiple);
+  const formValueSet = useRef(false);
 
   const updateMutation = useMutation({
     mutationFn: async (value: { name: string; description: string }) => {
@@ -87,6 +88,7 @@ export default function EditWorkout() {
     onSuccess: () => {
       toast.success('Workout Updated');
       queryClient.invalidateQueries({ queryKey: ['getWorkout'] });
+      queryClient.invalidateQueries({ queryKey: ['getWorkoutDetails', userId] });
       queryClient.invalidateQueries({ queryKey: ['workouts', id] });
       router.push('/(app)/(Workout)');
       resetExercise();
@@ -103,7 +105,7 @@ export default function EditWorkout() {
     queryFn: async () => await executeQuery<getExerciseType>('getExercise', { $userId: userId }),
   });
 
-  if (exercises.isError) toast.error('Failed To Fetch Exercises');
+  // if (exercises.isError) toast.error('Failed To Fetch Exercises');
 
   useQuery({
     queryKey: ['getWorkoutExerciseById', id],
@@ -114,7 +116,7 @@ export default function EditWorkout() {
       });
       const exerciseObj = res.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       setSelectedExercisesPrev(exerciseObj);
-      resetExercise();
+      // resetExercise();
       updateMultiple(res);
       return true;
     },
@@ -128,11 +130,11 @@ export default function EditWorkout() {
       return res[0];
     },
   });
-  const formValue = workoutQuery.data;
+
   const form = useAppForm({
     defaultValues: {
-      name: formValue?.name ?? '',
-      description: formValue?.description ?? '',
+      name: '',
+      description: '',
     },
     validators: {
       onChange: schema,
@@ -146,6 +148,15 @@ export default function EditWorkout() {
       });
     },
   });
+
+  useEffect(() => {
+    if (formValueSet.current) return;
+    const formValue = workoutQuery.data;
+    if (formValue) {
+      form.reset(formValue);
+      formValueSet.current = true;
+    }
+  }, [form, workoutQuery]);
 
   const handlePress = (e: getExerciseType) => {
     if (selectedExercises[e.id]) deleteExercise(e.id);

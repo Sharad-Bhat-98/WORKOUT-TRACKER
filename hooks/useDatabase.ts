@@ -8,7 +8,9 @@ export default function useDatabase() {
   const db = useSQLiteContext();
 
   const initDb = async () => {
-    await Promise.all(INIT_SQL.map((e) => db.execAsync(e)));
+    for (const sql of INIT_SQL) {
+      await db.execAsync(sql);
+    }
   };
 
   const executeQuery = async <T>(sql: string, args: Record<string, SQLite.SQLiteBindValue>) => {

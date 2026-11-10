@@ -21,6 +21,8 @@ import { toast } from 'sonner-native';
 import * as Crypto from 'expo-crypto';
 import { Skeleton } from '@/components/ui/skeleton';
 import useDatabase from '@/hooks/useDatabase';
+import dayjs from 'dayjs';
+import { convertToLocalTime } from '@/lib/utils';
 
 type submitArgs = {
   reps: number;
@@ -71,11 +73,13 @@ export default function SessionLog() {
   const graphData = useQuery({
     queryKey: ['getPrevSetDetails', ...prevSessions, exerciseId],
     enabled: Boolean(exerciseId && prevSession),
-    queryFn: async () =>
-      await executeQuery<getPrevSetDetailsType>('getPrevSetDetails', {
+    queryFn: async () => {
+      const res = await executeQuery<getPrevSetDetailsType>('getPrevSetDetails', {
         $SessionIds: JSON.stringify(prevSessions),
         $ExerciseId: exerciseId,
-      }),
+      });
+      return res.map((e) => ({ ...e, logged_at: convertToLocalTime(e.logged_at) }));
+    },
   });
 
   const handleNextExercise = useMutation({
@@ -94,7 +98,11 @@ export default function SessionLog() {
           },
         };
       });
-      if (isLast) queryData.push({ sql: 'updateSessionEndTime', args: { $SessionId: sessionId } });
+      if (isLast)
+        queryData.push({
+          sql: 'updateSessionEndTime',
+          args: { $SessionId: sessionId, $endedAt: dayjs().toISOString() },
+        });
       return await executeInsertUpdateOneTransaction(queryData);
     },
     onSuccess: () => {
