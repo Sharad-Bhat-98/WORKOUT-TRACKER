@@ -6,9 +6,14 @@ import Entypo from '@expo/vector-icons/Entypo';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+export const unstable_settings = {
+  anchor: 'HomePage',
+};
+
 export default function TabLayout() {
   return (
     <Tabs
+      backBehavior="initialRoute"
       screenOptions={{
         headerShown: false,
       }}>

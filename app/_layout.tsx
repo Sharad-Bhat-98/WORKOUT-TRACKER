@@ -79,10 +79,10 @@ const RootNavigator = () => {
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Protected guard={!userId}>
+              <Stack.Protected guard={!userId} redirectTo="/HomePage">
                 <Stack.Screen name="(setup)" options={{ title: 'SETUP' }} />
               </Stack.Protected>
-              <Stack.Protected guard={Boolean(userId)}>
+              <Stack.Protected guard={Boolean(userId)} redirectTo="/">
                 <Stack.Screen name="(app)" />
               </Stack.Protected>
             </Stack>
