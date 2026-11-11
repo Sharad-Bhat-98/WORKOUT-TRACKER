@@ -9,21 +9,21 @@ export default function WorkoutLayout() {
         name="index"
         options={{
           title: 'Workout',
-          headerRight: () => <AddButton path="/(app)/(Workout)/CreateWorkout" />,
+          headerRight: () => <AddButton path="/Workout/CreateWorkout" />,
         }}
       />
       <Stack.Screen
         name="CreateWorkout"
         options={{
           title: 'Create Workout',
-          headerLeft: () => <BackButton path="/(app)/(Workout)" />,
+          headerLeft: () => <BackButton path="/Workout" />,
         }}
       />
       <Stack.Screen
         name="EditWorkout"
         options={{
           title: 'Edit Workout',
-          headerLeft: () => <BackButton path="/(app)/(Workout)" />,
+          headerLeft: () => <BackButton path="/Workout" />,
         }}
       />
       <Stack.Screen name="WorkoutExerciseMap" options={{ headerShown: false }} />

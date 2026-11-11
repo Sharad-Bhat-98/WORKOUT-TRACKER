@@ -54,7 +54,7 @@ export default function Home() {
       });
       reset();
       setInitialValue(id, e.id, firstExercise, prevSessions, exerciseList ?? []);
-      router.replace(`/Session/${firstExercise}`);
+      router.replace(`/HomePage/Session/${firstExercise}`);
     },
     onError: (err) => {
       console.error(err);

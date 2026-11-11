@@ -98,7 +98,7 @@ export default function PrevSessionIndex() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="start">
-                    <DropdownMenuItem onPress={() => router.push(`/(app)/PrevSessions/${item.id}`)}>
+                    <DropdownMenuItem onPress={() => router.push(`/PrevSessions/${item.id}`)}>
                       <Icon as={Pencil} size={16} />
                       <Text>Edit</Text>
                     </DropdownMenuItem>

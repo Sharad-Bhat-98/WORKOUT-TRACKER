@@ -109,10 +109,10 @@ export default function SessionLog() {
       if (isLast) {
         reset();
         queryClient.invalidateQueries({ queryKey: ['getPrevSessions'] });
-        router.replace('/(app)/(HomePage)');
+        router.replace('/HomePage');
       } else {
         const nextExercise = setNextExercise();
-        router.replace(`/Session/${nextExercise}`);
+        router.replace(`/HomePage/Session/${nextExercise}`);
       }
     },
     onError: () => {

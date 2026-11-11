@@ -121,7 +121,7 @@ export default function EditSession() {
               <EndSessionPicker
                 disabled={updateEndTime.isPending}
                 endedAt={session.ended_at}
-                handlePress={updateEndTime}
+                endSession={updateEndTime}
               />
             </Card>
 

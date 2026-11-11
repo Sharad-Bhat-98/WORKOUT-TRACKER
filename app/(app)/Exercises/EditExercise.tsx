@@ -1,49 +1,54 @@
 import { useAppForm } from '@/components/HookForm';
 import { Card } from '@/components/ui/card';
+import useDatabase from '@/hooks/useDatabase';
+import { ImageType } from '@/types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'expo-router';
-import * as Crypto from 'expo-crypto';
-import { useUserStore } from '@/store/user';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { View } from 'react-native';
 import { toast } from 'sonner-native';
 import { z } from 'zod';
-import { ImageType } from '@/types/types';
-import { View } from 'react-native';
-import useDatabase from '@/hooks/useDatabase';
-import { useEffect } from 'react';
 
 const schema = z.object({
   name: z.string().min(3),
   image: z.string(),
 });
 
-export default function CreateExercise() {
+type ExerciseDetails = {
+  id: string;
+  name: string;
+  image: string | null;
+};
+
+export default function EditExercise() {
   const router = useRouter();
-  const userId = useUserStore((s) => s.user_id);
   const queryClient = useQueryClient();
   const { executeQuery, executeInsertUpdate } = useDatabase();
+
+  const { id: exerciseId } = useLocalSearchParams<{ id: string }>();
+  const id = Array.isArray(exerciseId) ? exerciseId[0] : exerciseId;
 
   const imagesQuery = useQuery({
     queryKey: ['getImages'],
     queryFn: async () => await executeQuery<ImageType>('getImages', {}),
   });
-  const createMutation = useMutation({
+
+  const updateMutation = useMutation({
     mutationFn: async (value: { name: string; image: string }) => {
-      const id = Crypto.randomUUID();
-      await executeInsertUpdate('createExercise', {
+      await executeInsertUpdate('updateExercise', {
         $id: id,
         $name: value.name,
-        $user_id: userId,
         $image: value.image,
       });
     },
     onSuccess: () => {
-      toast.success('Exercise Created');
+      toast.success('Exercise Updated');
       queryClient.invalidateQueries({ queryKey: ['getExercise'] });
-      router.push('/(app)/(Exercises)');
+      queryClient.invalidateQueries({ queryKey: ['exercises', id] });
+      router.replace('/Exercises');
     },
     onError: (err) => {
       console.error(err);
-      toast.error('Failed To create Workout');
+      toast.error('Failed To Update Exercise');
     },
   });
 
@@ -56,7 +61,7 @@ export default function CreateExercise() {
       onChange: schema,
     },
     onSubmit: async ({ value, formApi }) => {
-      await createMutation.mutateAsync(value, {
+      await updateMutation.mutateAsync(value, {
         onSuccess: () => {
           formApi.reset();
         },
@@ -64,9 +69,20 @@ export default function CreateExercise() {
     },
   });
 
-  useEffect(() => {
-    form.reset();
-  }, [form]);
+  useQuery({
+    queryKey: ['exercises', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const res = await executeQuery<ExerciseDetails>('getExerciseById', { $id: id });
+      const exercise = res[0];
+      if (!exercise) return;
+      form.reset();
+      form.setFieldValue('name', exercise.name);
+      form.setFieldValue('image', exercise.image ?? '');
+      return res;
+    },
+  });
+
   return (
     <View className="w-full px-5">
       <Card className="p-5">
@@ -74,7 +90,6 @@ export default function CreateExercise() {
           <form.AppField name="name">
             {(field) => <field.FormTextField label="Exercise Name" autoCapitalize="none" />}
           </form.AppField>
-
           <form.AppField name="image">
             {(field) => (
               <field.FormSelect

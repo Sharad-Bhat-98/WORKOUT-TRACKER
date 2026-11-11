@@ -90,7 +90,7 @@ export default function EditWorkout() {
       queryClient.invalidateQueries({ queryKey: ['getWorkout'] });
       queryClient.invalidateQueries({ queryKey: ['getWorkoutDetails', userId] });
       queryClient.invalidateQueries({ queryKey: ['workouts', id] });
-      router.push('/(app)/(Workout)');
+      router.push('/Workout');
       resetExercise();
     },
     onError: (err) => {
@@ -163,7 +163,7 @@ export default function EditWorkout() {
     else {
       // const record = selectedExercises[e.id];
       router.push({
-        pathname: '/(app)/(Workout)/WorkoutExerciseMap',
+        pathname: '/Workout/WorkoutExerciseMap',
         params: { id: e.id, name: e.name },
       });
     }

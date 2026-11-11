@@ -70,7 +70,7 @@ export default function Exercise() {
                     <DropdownMenuItem
                       onPress={() =>
                         router.push({
-                          pathname: '/(app)/(Exercises)/EditExercise',
+                          pathname: '/Exercises/EditExercise',
                           params: { id: e.id },
                         })
                       }>

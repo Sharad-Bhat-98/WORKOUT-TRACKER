@@ -8,14 +8,14 @@ export default function PrevSession() {
         name="index"
         options={{
           title: 'Prev Sessions',
-          headerLeft: () => <BackButton path="/(app)/(HomePage)" />,
+          headerLeft: () => <BackButton path="/HomePage" />,
         }}
       />
       <Stack.Screen
         name="[EditSession]"
         options={{
           title: '',
-          headerLeft: () => <BackButton path="/(app)/PrevSessions" />,
+          headerLeft: () => <BackButton path="/PrevSessions" />,
         }}
       />
     </Stack>

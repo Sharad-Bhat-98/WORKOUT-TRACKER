@@ -13,7 +13,7 @@ export default function TabLayout() {
         headerShown: false,
       }}>
       <Tabs.Screen
-        name="(HomePage)"
+        name="HomePage"
         options={{
           title: 'Home',
           tabBarIcon: ({ color, size }) => <FontAwesome5 name="home" size={size} color={color} />,
@@ -27,7 +27,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(Workout)"
+        name="Workout"
         options={{
           title: 'Workout',
           headerShown: false,
@@ -38,7 +38,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="(Exercises)"
+        name="Exercises"
         options={{
           title: 'Exercise',
           headerShown: false,

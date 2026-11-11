@@ -60,7 +60,7 @@ export default function CreateWorkout() {
       resetExercise();
       queryClient.invalidateQueries({ queryKey: ['getWorkout'] });
       queryClient.invalidateQueries({ queryKey: ['getWorkoutDetails'] });
-      router.replace('/(app)/(Workout)');
+      router.replace('/Workout');
     },
     onError: (err) => {
       console.error(err);
@@ -107,7 +107,7 @@ export default function CreateWorkout() {
     if (selectedExercises[e.id]) deleteExercise(e.id);
     else {
       router.push({
-        pathname: '/(app)/(Workout)/WorkoutExerciseMap',
+        pathname: '/Workout/WorkoutExerciseMap',
         params: { id: e.id, name: e.name, position: undefined, sets: undefined },
       });
     }

@@ -9,21 +9,21 @@ export default function ExerciseLayout() {
         name="index"
         options={{
           title: 'Exercise',
-          headerRight: () => <AddButton path="/CreateExercises" />,
+          headerRight: () => <AddButton path="/Exercises/CreateExercises" />,
         }}
       />
       <Stack.Screen
         name="CreateExercises"
         options={{
           title: 'Create Exercise',
-          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
+          headerLeft: () => <BackButton path="/Exercises" />,
         }}
       />
       <Stack.Screen
         name="EditExercise"
         options={{
           title: 'Edit Exercise',
-          headerLeft: () => <BackButton path="/(app)/(Exercises)" />,
+          headerLeft: () => <BackButton path="/Exercises" />,
         }}
       />
     </Stack>
