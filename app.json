@@ -17,11 +17,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#000000"
       },
-      "permissions": [
-        "android.permission.USE_BIOMETRIC",
-        "android.permission.USE_FINGERPRINT",
-        "android.permission.RECORD_AUDIO"
-      ],
+      "permissions": ["android.permission.RECORD_AUDIO"],
       "package": "com.anonymous.workout_tracker"
     },
     "web": {
@@ -45,12 +41,6 @@
       ],
       "expo-status-bar",
       "expo-sqlite",
-      [
-        "expo-local-authentication",
-        {
-          "faceIDPermission": "Unlock Workout Tracker with Face ID."
-        }
-      ],
       [
         "expo-image-picker",
         {
