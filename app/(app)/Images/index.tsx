@@ -11,11 +11,12 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import ImageCard from '@/components/ImageCard';
-import { ImageType } from '@/types/types';
-
+import { executeInsertUpdateOneTransactionType, ImageType } from '@/types/types';
 import { Icon } from '@/components/ui/icon';
 import { Trash2 } from 'lucide-react-native';
 import useDatabase from '@/hooks/useDatabase';
+import * as Crypto from 'expo-crypto';
+import { useUserStore } from '@/store/user';
 
 const schema = z.object({
   name: z.string(),
@@ -25,7 +26,8 @@ export default function UploadImage() {
   const queryClient = useQueryClient();
   const [image, setImage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const { executeQuery, executeInsertUpdate } = useDatabase();
+  const { executeQuery, executeInsertUpdate, executeInsertUpdateOneTransaction } = useDatabase();
+  const userId = useUserStore((s) => s.user_id);
 
   const imageData = useQuery({
     queryKey: ['getImages'],
@@ -50,10 +52,25 @@ export default function UploadImage() {
   });
   const createMutation = useMutation({
     mutationFn: async (value: { name: string }) => {
-      await executeInsertUpdate('insertImage', {
-        $name: value.name,
-        $image_data: image ?? '',
-      });
+      const arr: executeInsertUpdateOneTransactionType[] = [
+        {
+          sql: 'insertImage',
+          args: {
+            $name: value.name,
+            $image_data: image ?? '',
+          },
+        },
+        {
+          sql: 'createExercise',
+          args: {
+            $id: Crypto.randomUUID(),
+            $name: value.name,
+            $user_id: userId ?? '',
+            $image: value.name,
+          },
+        },
+      ];
+      return await executeInsertUpdateOneTransaction(arr);
     },
     onSuccess: () => {
       toast.success('Image Uploaded');
@@ -90,7 +107,8 @@ export default function UploadImage() {
     if (res.canceled) return;
     try {
       setBusy(true);
-      setImage(await compressToBase64(res.assets[0].uri));
+      const asset = res.assets[0];
+      setImage(await compressToBase64(asset.uri, asset.width, asset.height));
     } catch (e) {
       toast.error('Could not compress image under 100KB');
     } finally {
@@ -111,7 +129,7 @@ export default function UploadImage() {
           {image && (
             <Image
               source={{ uri: `data:image/png;base64,${image}` }}
-              style={{ width: 120, height: 120 }}
+              style={{ width: 200, height: 200 }}
             />
           )}
           <form.SubmitButton title="Submit" />
@@ -145,26 +163,35 @@ const MAX_BYTES = 100 * 1024;
 const base64Bytes = (b64: string) =>
   Math.ceil((b64.length * 3) / 4) - (b64.endsWith('==') ? 2 : b64.endsWith('=') ? 1 : 0);
 
-export async function compressToBase64(uri: string): Promise<string> {
-  let width = 1080;
+export async function compressToBase64(
+  uri: string,
+  sourceWidth: number,
+  sourceHeight: number
+): Promise<string> {
+  const side = Math.min(sourceWidth, sourceHeight);
+  const originX = Math.floor((sourceWidth - side) / 2);
+  const originY = Math.floor((sourceHeight - side) / 2);
   let quality = 0.8;
 
-  while (width >= 200) {
-    const result = await ImageManipulator.manipulateAsync(uri, [{ resize: { width } }], {
-      compress: quality,
-      format: ImageManipulator.SaveFormat.JPEG,
-      base64: true,
-    });
+  while (quality >= 0.3) {
+    const result = await ImageManipulator.manipulateAsync(
+      uri,
+      [
+        { crop: { originX, originY, width: side, height: side } },
+        { resize: { width: 200, height: 200 } },
+      ],
+      {
+        compress: quality,
+        format: ImageManipulator.SaveFormat.JPEG,
+        base64: true,
+      }
+    );
 
     if (result.base64 && base64Bytes(result.base64) <= MAX_BYTES) {
       return result.base64;
     }
 
-    if (quality > 0.4) quality -= 0.15;
-    else {
-      width = Math.round(width * 0.75);
-      quality = 0.7;
-    }
+    quality -= 0.15;
   }
 
   throw new Error('Could not compress image under 100KB');

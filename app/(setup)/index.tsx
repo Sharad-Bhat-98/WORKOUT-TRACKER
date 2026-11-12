@@ -16,7 +16,7 @@ const schema = z.object({
 });
 export default function Setup() {
   const userStore = useUserStore();
-  const { executeInsertUpdateOneTransaction, importDb } = useDatabase();
+  const { executeInsertUpdateOneTransaction, importDb, executeInsertUpdate } = useDatabase();
 
   const form = useAppForm({
     defaultValues: {
@@ -28,15 +28,23 @@ export default function Setup() {
     onSubmit: async ({ value }) => {
       const id = Crypto.randomUUID();
       // insert all the default images
+      // createExercise
       const arr = Object.entries(IMAGES).map(([name, imageData]) => ({
         sql: 'insertImage',
         args: { $name: name, $image_data: imageData },
       }));
+
+      const exercisesArr = Object.entries(IMAGES).map(([name, _]) => ({
+        sql: 'createExercise',
+        args: { $id: Crypto.randomUUID(), $name: name, $user_id: id, $image: name },
+      }));
       await executeInsertUpdateOneTransaction([
         { sql: 'CreateUser', args: { $id: id, $username: value.name } },
         ...arr,
+        ...exercisesArr,
       ]);
       userStore.setUser(id, value.name);
+      return true;
     },
   });
 
