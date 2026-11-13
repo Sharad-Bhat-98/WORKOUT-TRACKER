@@ -1,73 +1,66 @@
-# Minimal Template
+# Workout Tracker
 
-This is a [React Native](https://reactnative.dev/) project built with [Expo](https://expo.dev/) and [React Native Reusables](https://reactnativereusables.com).
+A local-first workout log for iOS, Android, and web. Workouts, exercises, set history, and images stay on the device in SQLite. There is no account server.
 
-It was initialized using the following command, then the `Minimal (Nativewind)` template was selected when prompted:
+## Features
 
-```bash
-npx @react-native-reusables/cli@latest init
-```
+- **Setup.** On first launch, create a username or import an existing database backup. A new profile is seeded with default exercises and images.
+- **Home.** Start a session from a workout and open past sessions.
+- **Sessions.** Log sets (reps and weight), compare them with the last session, and see recent trends (estimated 1RM, max weight, total reps, and volume). Edit finished sessions later.
+- **Workouts.** Create, edit, and delete routines. Attach exercises with an order and a target set count.
+- **Exercises.** Create, edit, and delete exercises, each with an image.
+- **Images.** Upload photos used by exercises and workouts. Images are stored in the database.
+- **Profile.** Export the SQLite database to a file, or import a backup and reload the app.
+- **Appearance.** Light and dark mode follow the system theme.
 
-## Getting Started
+## Stack
 
-To run the development server:
+- [Expo](https://expo.dev/) (SDK 58) and [Expo Router](https://docs.expo.dev/router/introduction/)
+- [React Native](https://reactnative.dev/) with the New Architecture
+- [expo-sqlite](https://docs.expo.dev/versions/latest/sdk/sqlite/) for local storage
+- [TanStack Query](https://tanstack.com/query) and [Zustand](https://zustand.docs.pmnd.rs/)
+- [NativeWind](https://www.nativewind.dev/) and [React Native Reusables](https://reactnativereusables.com)
 
-```bash
-    npm run dev
-    # or
-    yarn dev
-    # or
-    pnpm dev
-    # or
-    bun dev
-```
+## Requirements
 
-This will start the Expo Dev Server. Open the app in:
+- Node.js
+- [pnpm](https://pnpm.io/)
+- For a device or simulator: [Expo Go](https://expo.dev/go), or a development build (`expo-dev-client` is included)
 
-- **iOS**: press `i` to launch in the iOS simulator _(Mac only)_
-- **Android**: press `a` to launch in the Android emulator
-- **Web**: press `w` to run in a browser
-
-You can also scan the QR code using the [Expo Go](https://expo.dev/go) app on your device. This project fully supports running in Expo Go for quick testing on physical devices.
-
-## Adding components
-
-You can add more reusable components using the CLI:
+## Getting started
 
 ```bash
-npx react-native-reusables/cli@latest add [...components]
+pnpm install
+pnpm dev
 ```
 
-> e.g. `npx react-native-reusables/cli@latest add input textarea`
+That starts the Expo dev server. From there:
 
-If you don't specify any component names, you'll be prompted to select which components to add interactively. Use the `--all` flag to install all available components at once.
+- **Android:** press `a`, or run `pnpm android`
+- **iOS:** press `i` (macOS only), or run `pnpm ios`
+- **Web:** press `w`, or run `pnpm web`
 
-## Project Features
+You can also scan the QR code with Expo Go.
 
-- ⚛️ Built with [Expo Router](https://expo.dev/router)
-- 🎨 Styled with [Tailwind CSS](https://tailwindcss.com/) via [Nativewind](https://www.nativewind.dev/)
-- 📦 UI powered by [React Native Reusables](https://github.com/founded-labs/react-native-reusables)
-- 🚀 New Architecture enabled
-- 🔥 Edge to Edge enabled
-- 📱 Runs on iOS, Android, and Web
+`pnpm clean` removes `.expo` and `node_modules`.
 
-## Learn More
+## Data
 
-To dive deeper into the technologies used:
+The app opens a local database named `workout.db` and creates tables for users, images, exercises, workouts, workout exercises, sessions, and set logs.
 
-- [React Native Docs](https://reactnative.dev/docs/getting-started)
-- [Expo Docs](https://docs.expo.dev/)
-- [Nativewind Docs](https://www.nativewind.dev/)
-- [React Native Reusables](https://reactnativereusables.com)
+Export writes a `.db` file to a folder you pick. Import checks that the file is a SQLite database that contains a `workouts` table, replaces the live database, and reloads the app. Import is also available on the setup screen before a profile exists.
 
-## Deploy with EAS
+## Project layout
 
-The easiest way to deploy your app is with [Expo Application Services (EAS)](https://expo.dev/eas).
-
-- [EAS Build](https://docs.expo.dev/build/introduction/)
-- [EAS Updates](https://docs.expo.dev/eas-update/introduction/)
-- [EAS Submit](https://docs.expo.dev/submit/introduction/)
-
----
-
-If you enjoy using React Native Reusables, please consider giving it a ⭐ on [GitHub](https://github.com/founded-labs/react-native-reusables). Your support means a lot!
+| Path | What it holds |
+| --- | --- |
+| `app/(setup)` | First-run username and database import |
+| `app/(app)/HomePage` | Workout list and active session logging |
+| `app/(app)/PrevSessions` | Past sessions and edits |
+| `app/(app)/Workout` | Workout create, edit, and exercise mapping |
+| `app/(app)/Exercises` | Exercise create and edit |
+| `app/(app)/Images` | Image library |
+| `app/(app)/Profile` | Database export and import |
+| `lib/query.ts` | Schema and SQL |
+| `hooks/useDatabase.ts` | Query runner plus export and import |
+| `store/` | User, active session, and workout-exercise state |
